@@ -10,6 +10,7 @@ import { CONTROL_MAP } from "../../controls/controlMap";
 import { GameInputBridge } from "../../controls/GameInputBridge";
 import type { AudioService } from "../../audio/audioService";
 import { FirstPersonCamera } from "./FirstPersonCamera";
+import { FpsTracker } from "./FpsTracker";
 import { GameClock } from "./GameClock";
 import { InteractionFocus } from "./InteractionFocus";
 import { Level } from "./Level";
@@ -35,7 +36,11 @@ type SceneContentProps = {
   audio: AudioService;
 };
 
-function SceneContent({ started, audio }: SceneContentProps) {
+function SceneContent({
+  started,
+  paused,
+  audio,
+}: SceneContentProps & { paused: boolean }) {
   const playerRef = useRef<RapierRigidBody>(null);
   const fogColor = "#0a1628";
 
@@ -51,7 +56,7 @@ function SceneContent({ started, audio }: SceneContentProps) {
           <Player ref={playerRef} audio={audio} />
         </ZoneOverlapProvider>
       </Physics>
-      <GameClock running={started} />
+      <GameClock running={started && !paused} />
       {started ? (
         <>
           <FirstPersonCamera target={playerRef} />
@@ -71,10 +76,11 @@ function SceneContent({ started, audio }: SceneContentProps) {
 
 type GameSceneProps = {
   started: boolean;
+  paused: boolean;
   audio: AudioService;
 };
 
-export function GameScene({ started, audio }: GameSceneProps) {
+export function GameScene({ started, paused, audio }: GameSceneProps) {
   return (
     <div className="game-scene">
       <Canvas
@@ -83,9 +89,10 @@ export function GameScene({ started, audio }: GameSceneProps) {
         dpr={[1, 2]}
       >
         <KeyboardControls map={CONTROL_MAP}>
+          <FpsTracker />
           <GameInputBridge audio={audio} />
           <Suspense fallback={null}>
-            <SceneContent started={started} audio={audio} />
+            <SceneContent started={started} paused={paused} audio={audio} />
           </Suspense>
         </KeyboardControls>
       </Canvas>

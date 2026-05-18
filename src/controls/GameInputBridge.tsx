@@ -37,7 +37,7 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
       const action = edgeActionFromKeyboard(e.code);
       if (!action) return;
 
-      if (store.fabricatorOpen || store.storageOpen) {
+      if (store.pauseOpen || store.fabricatorOpen || store.storageOpen) {
         return;
       }
 
@@ -128,6 +128,7 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
       const store = useGameStore.getState();
       if (
         !store.started ||
+        store.pauseOpen ||
         store.inventoryOpen ||
         store.fabricatorOpen ||
         store.storageOpen
@@ -159,6 +160,7 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
     const canvas = gl.domElement;
     const unsub = useGameStore.subscribe((state, prev) => {
       const menuOpened =
+        (state.pauseOpen && !prev.pauseOpen) ||
         (state.inventoryOpen && !prev.inventoryOpen) ||
         (state.fabricatorOpen && !prev.fabricatorOpen) ||
         (state.storageOpen && !prev.storageOpen);

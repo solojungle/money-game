@@ -13,6 +13,21 @@ export function usePdaKeyboard() {
       const store = useGameStore.getState();
       if (!store.started) return;
 
+      if (e.code === "Period") {
+        e.preventDefault();
+        if (document.pointerLockElement) {
+          document.exitPointerLock();
+        }
+        if (
+          !store.pauseOpen &&
+          (store.fabricatorOpen || store.storageOpen || store.inventoryOpen)
+        ) {
+          return;
+        }
+        store.togglePause();
+        return;
+      }
+
       if (e.key === "Escape") {
         if (store.fabricatorOpen) {
           e.preventDefault();
@@ -27,6 +42,7 @@ export function usePdaKeyboard() {
         if (store.inventoryOpen) {
           e.preventDefault();
           store.setInventoryOpen(false);
+          return;
         }
         return;
       }

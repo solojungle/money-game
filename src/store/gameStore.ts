@@ -150,10 +150,14 @@ type GameState = {
   storageSelected: StorageHover | null;
   storageHover: StorageHover | null;
   containers: Record<string, InventorySlot[]>;
+  pauseOpen: boolean;
 
   tick: (dtMs: number) => void;
   setStarted: (v: boolean) => void;
   startGame: () => void;
+  setPauseOpen: (open: boolean) => void;
+  togglePause: () => void;
+  quitToMainMenu: () => void;
   setPlayerDepth: (depthM: number) => void;
   setPlayerWorldPos: (pos: { x: number; y: number; z: number }) => void;
   setHeadingDeg: (deg: number) => void;
@@ -298,6 +302,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   storageSelected: null,
   storageHover: null,
   containers: {},
+  pauseOpen: false,
 
   nearDeath: () => {
     const s = get();
@@ -353,8 +358,45 @@ export const useGameStore = create<GameState>((set, get) => ({
       storageSelected: null,
       storageHover: null,
       containers: {},
+      pauseOpen: false,
     });
     bindSystems(set);
+  },
+
+  setPauseOpen: (open) => set({ pauseOpen: open }),
+
+  togglePause: () =>
+    set((s) => {
+      if (!s.started) return s;
+      const next = !s.pauseOpen;
+      if (next) {
+        return {
+          pauseOpen: true,
+          inventoryOpen: false,
+          fabricatorOpen: false,
+          storageOpen: false,
+          craftQueue: [],
+          storageSelected: null,
+          storageHover: null,
+          pdaHover: null,
+        };
+      }
+      return { pauseOpen: false };
+    }),
+
+  quitToMainMenu: () => {
+    disposeGameSystems();
+    set({
+      started: false,
+      pauseOpen: false,
+      inventoryOpen: false,
+      fabricatorOpen: false,
+      storageOpen: false,
+      craftQueue: [],
+      storageSelected: null,
+      storageHover: null,
+      pdaHover: null,
+    });
   },
 
   setPlayerDepth: (depthM) => set({ depthM }),

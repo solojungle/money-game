@@ -28,10 +28,6 @@ export function MainMenu({ onStart }: MainMenuProps) {
   const version =
     typeof packageJson.version === "string" ? packageJson.version : "0.0.0";
 
-  const handleImportSave = useCallback(() => {
-    window.alert("No save file selected.");
-  }, []);
-
   const handleQuit = useCallback(() => {
     window.close();
     window.setTimeout(() => {
@@ -72,11 +68,6 @@ export function MainMenu({ onStart }: MainMenuProps) {
       </div>
 
       <nav className="main-menu__utility" aria-label="Utility menu">
-        <MainMenuButton
-          variant="utility"
-          label="Import Save"
-          onClick={handleImportSave}
-        />
         <MainMenuButton
           variant="utility"
           label="Settings"

@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 1.25rem 1.5rem 1rem;
+  padding: 0 var(--menu-shell-pad-x) 0;
   background: var(--menu-scrim);
   backdrop-filter: var(--menu-scrim-blur);
   pointer-events: auto;
@@ -19,7 +19,7 @@
   flex: 1;
   min-height: 0;
   width: 100%;
-  max-width: min(64rem, 100%);
+  max-width: min(var(--menu-shell-chrome-max), 100%);
   position: relative;
 }
 
@@ -42,15 +42,34 @@
 
 /* Tabs — full chrome width, equal columns */
 .pda-tabs {
+  position: relative;
+  z-index: 0;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: stretch;
   column-gap: 1.15rem;
   width: 100%;
   margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(0, 242, 255, 0.25);
-  padding-bottom: 0.35rem;
+  padding: calc(0.5rem + var(--menu-shell-pad-top)) 0.65rem 0.4rem;
+  border-bottom: 1px solid rgba(0, 242, 255, 0.35);
+  background: transparent;
   flex-shrink: 0;
+  isolation: isolate;
+}
+
+.pda-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  background: var(--menu-chrome-bar-bg);
+  -webkit-backdrop-filter: var(--menu-chrome-bar-blur);
+  backdrop-filter: var(--menu-chrome-bar-blur);
+  pointer-events: none;
 }
 
 .pda-tabs__list {

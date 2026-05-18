@@ -13,4 +13,40 @@
   --menu-tooltip: rgba(8, 26, 32, 0.78);
   --menu-chip: rgba(0, 0, 0, 0.22);
   --menu-chip-border: rgba(11, 26, 38, 0.55);
+
+  /* PDA / station / settings shell — +100px chrome width, no side pad (was 1.5rem) */
+  --menu-shell-pad-x: 0px;
+  --menu-shell-pad-top: 1.25rem;
+  --menu-shell-pad-bottom: 1rem;
+  --menu-shell-chrome-max: calc(64rem + 100px);
+
+  /* Tab row + action footer — frosted glass (tint + blur, not solid) */
+  --menu-chrome-bar-bg: rgba(6, 16, 24, 0.24);
+  --menu-chrome-bar-blur: blur(26px) saturate(1.18);
+  --menu-chrome-bar-fade: 6rem;
+  --menu-chrome-bar-edge-start: calc(
+    50% - min(var(--menu-shell-chrome-max), 100vw) / 2
+  );
+  --menu-chrome-bar-edge-end: calc(
+    50% + min(var(--menu-shell-chrome-max), 100vw) / 2
+  );
+  --menu-chrome-bar-fade-out-start: max(
+    0%,
+    calc(var(--menu-chrome-bar-edge-start) - var(--menu-chrome-bar-fade))
+  );
+  --menu-chrome-bar-fade-out-end: min(
+    100%,
+    calc(var(--menu-chrome-bar-edge-end) + var(--menu-chrome-bar-fade))
+  );
+  /* Full frost inside chrome; gradual fade beyond border */
+  --menu-chrome-bar-mask: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent var(--menu-chrome-bar-fade-out-start),
+    black var(--menu-chrome-bar-edge-start),
+    black var(--menu-chrome-bar-edge-end),
+    transparent var(--menu-chrome-bar-fade-out-end),
+    transparent 100%
+  );
+  --menu-bracket-inset: 0.35rem;
 }

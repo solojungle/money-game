@@ -5,6 +5,7 @@ export function movementAllowed(slice: {
   inventoryOpen: boolean;
   fabricatorOpen: boolean;
   storageOpen: boolean;
+  pauseOpen: boolean;
 }): boolean {
   return !uiCapturesInput(slice);
 }

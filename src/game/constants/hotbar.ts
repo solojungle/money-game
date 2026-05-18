@@ -13,6 +13,14 @@ export function createEmptyHotbarSlots(): (string | null)[] {
   return Array.from({ length: HOTBAR_SLOT_COUNT }, () => null);
 }
 
+/** Play start — Survival Multitool + Habitat Builder. */
+export function createStarterHotbarSlots(): (string | null)[] {
+  const slots = createEmptyHotbarSlots();
+  slots[0] = "knife";
+  slots[1] = "builder";
+  return slots;
+}
+
 /** Dev default — pre-assigns starter tools. */
 export function createDefaultHotbarSlots(): (string | null)[] {
   const slots = createEmptyHotbarSlots();

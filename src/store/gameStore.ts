@@ -2,9 +2,9 @@ import { create } from "zustand";
 import type { GameMode } from "../game/types";
 import { createVitalsStub } from "../game/presentation/hud";
 import {
-  deserializeSave,
+  normalizeSave,
   serializeSave,
-  type SaveSnapshotV4,
+  type SaveSnapshotV5,
 } from "../game/save/schema";
 import type { CraftJob } from "../game/crafting/types";
 import type { FabricatorCategory } from "../game/crafting/types";
@@ -43,6 +43,7 @@ import {
 } from "../game/systems/inventory";
 import { getItemDef } from "../game/systems/inventory";
 import { isToolItem } from "../game/systems/inventory/itemMeta";
+import { addItem, removeItem } from "../game/systems/inventory/stacks";
 import { restoreTeamTech } from "../game/systems/progression";
 import {
   disposeGameSystems,
@@ -51,6 +52,7 @@ import {
 } from "../game/systems/registerSystems";
 import {
   createEmptyHotbarSlots,
+  createStarterHotbarSlots,
   HOTBAR_SLOT_COUNT,
 } from "../game/constants/hotbar";
 import { isNearDeath } from "../game/systems/vitals";
@@ -69,8 +71,34 @@ import {
   defaultDropOrigin,
   spawnWorldDropsAt,
 } from "../game/systems/worldDrops";
+import type {
+  BuilderCategory,
+  BuilderMode,
+  PlacedPiece,
+  PlacementPreview,
+} from "../game/building";
+import {
+  canAffordPiece,
+  consumePieceIngredients,
+  getPinBlueprintIdForPiece,
+  isInsideBaseInterior,
+  isPiecePlaceable,
+  pieceCreatesContainer,
+  refundPieceIngredients,
+} from "../game/building";
+import type { ContainerDefId } from "../game/systems/storage/containerDefs";
+import {
+  containerDefForPlaced,
+  ensureContainerWithDef,
+  initialBuilderState,
+  isBuilderEquipped,
+} from "./builderActions";
+import {
+  BUILDER_CATEGORY_ORDER,
+  defaultBuilderCategory,
+} from "./builderActionsConstants";
 
-const SAVE_KEY = "money-game-save-v4";
+const SAVE_KEY = "money-game-save-v5";
 
 export type FabricatorView = "categories" | "browse";
 
@@ -151,6 +179,16 @@ type GameState = {
   storageHover: StorageHover | null;
   containers: Record<string, InventorySlot[]>;
   pauseOpen: boolean;
+  builderOpen: boolean;
+  builderCategory: BuilderCategory;
+  builderHoveredPieceId: string | null;
+  builderSelectedPieceId: string | null;
+  builderMode: BuilderMode;
+  builderSnapEnabled: boolean;
+  builderPlacementYaw: number;
+  builderPlacementPreview: PlacementPreview | null;
+  builderMoveSourceId: string | null;
+  placedPieces: PlacedPiece[];
 
   tick: (dtMs: number) => void;
   setStarted: (v: boolean) => void;
@@ -200,22 +238,39 @@ type GameState = {
   closeAllStationUis: () => void;
   fabricatorCraftClick: () => void;
   fabricatorPinClick: () => void;
+  setBuilderOpen: (open: boolean) => void;
+  selectBuilderCategory: (category: BuilderCategory) => void;
+  cycleBuilderCategory: (delta: 1 | -1) => void;
+  setBuilderHoveredPiece: (pieceId: string | null) => void;
+  builderSelectHovered: () => void;
+  builderPinHovered: () => void;
+  openBuilderMenu: () => void;
+  toggleBuilderDeconstruct: () => void;
+  toggleBuilderMove: () => void;
+  toggleBuilderSnap: () => void;
+  rotateBuilderPlacement: (delta: number) => void;
+  cancelBuilderPlacement: () => void;
+  setBuilderPlacementPreview: (preview: PlacementPreview | null) => void;
+  builderTryPrimary: () => void;
+  builderTrySecondary: () => void;
 };
 
 function ensureContainer(
   containers: Record<string, InventorySlot[]>,
   containerId: string,
+  defId?: ContainerDefId,
 ): Record<string, InventorySlot[]> {
   if (containers[containerId]) return containers;
-  return {
-    ...containers,
-    [containerId]: createEmptyContainerSlots("small_locker"),
-  };
+  return ensureContainerWithDef(
+    containers,
+    containerId,
+    defId ?? "small_locker",
+  );
 }
 
-function snapshotFromState(s: GameState): SaveSnapshotV4 {
+function snapshotFromState(s: GameState): SaveSnapshotV5 {
   return {
-    version: 4,
+    version: 5,
     gameMode: "play",
     teamTech: [...s.unlockedBlueprintIds],
     inventory: s.inventory.map((slot) =>
@@ -239,6 +294,7 @@ function snapshotFromState(s: GameState): SaveSnapshotV4 {
         ),
       ]),
     ),
+    placedPieces: s.placedPieces.map((p) => ({ ...p })),
   };
 }
 
@@ -246,11 +302,15 @@ function bindSystems(set: (fn: (s: GameState) => Partial<GameState>) => void) {
   initGameSystems(
     () => {
       const s = useGameStore.getState();
+      const pos = s.playerWorldPos;
       return {
         o2Percent: s.o2Percent,
         depthM: s.depthM,
         hasRebreather: s.hasRebreather,
         gameMode: s.gameMode,
+        inBaseInterior:
+          pos != null &&
+          isInsideBaseInterior([pos.x, pos.y, pos.z], s.placedPieces),
       };
     },
     (partial) => set(() => partial),
@@ -301,8 +361,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   activeContainerId: null,
   storageSelected: null,
   storageHover: null,
-  containers: {},
   pauseOpen: false,
+  ...initialBuilderState(),
 
   nearDeath: () => {
     const s = get();
@@ -343,7 +403,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       activeInteractable: null,
       harvestedIds: [],
       flashlightOn: false,
-      hotbarSlots: createEmptyHotbarSlots(),
+      hotbarSlots: createStarterHotbarSlots(),
       quickSlot: 0,
       pickupFloats: [],
       worldDrops: [],
@@ -357,8 +417,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       activeContainerId: null,
       storageSelected: null,
       storageHover: null,
-      containers: {},
       pauseOpen: false,
+      ...initialBuilderState(),
     });
     bindSystems(set);
   },
@@ -374,6 +434,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           pauseOpen: true,
           inventoryOpen: false,
           fabricatorOpen: false,
+          builderOpen: false,
           storageOpen: false,
           craftQueue: [],
           storageSelected: null,
@@ -391,6 +452,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       pauseOpen: false,
       inventoryOpen: false,
       fabricatorOpen: false,
+      builderOpen: false,
       storageOpen: false,
       craftQueue: [],
       storageSelected: null,
@@ -654,7 +716,12 @@ export const useGameStore = create<GameState>((set, get) => ({
       outcome.result.kind === "open_storage" &&
       target?.kind === "storage_locker"
     ) {
-      const containers = ensureContainer(s.containers, target.containerId);
+      const defId = containerDefForPlaced(s.placedPieces, target.containerId);
+      const containers = ensureContainer(
+        s.containers,
+        target.containerId,
+        defId,
+      );
       patch.storageOpen = true;
       patch.activeContainerId = target.containerId;
       patch.containers = containers;
@@ -715,6 +782,14 @@ export const useGameStore = create<GameState>((set, get) => ({
       s.fabricatorCraftClick();
       return;
     }
+    if (s.builderOpen) {
+      s.builderSelectHovered();
+      return;
+    }
+    if (isBuilderEquipped(s.hotbarSlots, s.quickSlot) && !s.inventoryOpen) {
+      s.builderTryPrimary();
+      return;
+    }
     if (s.inventoryOpen) {
       s.pdaPrimaryAction();
       return;
@@ -731,7 +806,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   onDeconstruct: () => {
-    /* SN1: Q deconstructs in build mode */
+    const s = get();
+    if (isBuilderEquipped(s.hotbarSlots, s.quickSlot) && !s.builderOpen) {
+      get().toggleBuilderDeconstruct();
+    }
   },
 
   saveToLocal: () => {
@@ -747,7 +825,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     try {
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return false;
-      const data = deserializeSave(raw);
+      const data = normalizeSave(JSON.parse(raw) as unknown);
       if (!data) return false;
       restoreTeamTech(data.teamTech);
       const boot = createPlayBootstrap();
@@ -772,7 +850,19 @@ export const useGameStore = create<GameState>((set, get) => ({
             slots.map((slot) => (slot ? { ...slot } : null)),
           ]),
         ),
+        placedPieces: (
+          data.placedPieces ?? initialBuilderState().placedPieces
+        ).map((p) => ({ ...p })),
         fabricatorOpen: false,
+        builderOpen: false,
+        builderCategory: defaultBuilderCategory,
+        builderHoveredPieceId: null,
+        builderSelectedPieceId: null,
+        builderMode: "place",
+        builderSnapEnabled: true,
+        builderPlacementYaw: 0,
+        builderPlacementPreview: null,
+        builderMoveSourceId: null,
         fabricatorView: "categories",
         fabricatorCategory: null,
         fabricatorHoveredRecipeId: null,
@@ -792,6 +882,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   closeAllStationUis: () =>
     set({
       fabricatorOpen: false,
+      builderOpen: false,
       storageOpen: false,
       craftQueue: [],
       storageSelected: null,
@@ -842,6 +933,210 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   fabricatorPinClick: () => get().fabricatorPinHovered(),
 
+  setBuilderOpen: (open) =>
+    set({
+      builderOpen: open,
+      builderHoveredPieceId: open ? get().builderHoveredPieceId : null,
+      builderCategory: open
+        ? (get().builderCategory ?? defaultBuilderCategory)
+        : get().builderCategory,
+    }),
+
+  selectBuilderCategory: (category) =>
+    set({
+      builderCategory: category,
+      builderHoveredPieceId: null,
+    }),
+
+  cycleBuilderCategory: (delta) =>
+    set((s) => {
+      const i = BUILDER_CATEGORY_ORDER.indexOf(s.builderCategory);
+      const next =
+        (i + delta + BUILDER_CATEGORY_ORDER.length) %
+        BUILDER_CATEGORY_ORDER.length;
+      return {
+        builderCategory: BUILDER_CATEGORY_ORDER[next]!,
+        builderHoveredPieceId: null,
+      };
+    }),
+
+  setBuilderHoveredPiece: (pieceId) => set({ builderHoveredPieceId: pieceId }),
+
+  builderSelectHovered: () => {
+    const s = get();
+    const id = s.builderHoveredPieceId;
+    if (!id) return;
+    set({
+      builderSelectedPieceId: id,
+      builderOpen: false,
+      builderMode: "place",
+      builderMoveSourceId: null,
+    });
+  },
+
+  builderPinHovered: () => {
+    const s = get();
+    const id = s.builderHoveredPieceId;
+    if (!id) return;
+    const bp = getPinBlueprintIdForPiece(id);
+    if (!bp) return;
+    if (s.pinnedBlueprintIds.includes(bp)) {
+      get().unpinBlueprintId(bp);
+    } else {
+      get().pinBlueprintId(bp);
+    }
+  },
+
+  openBuilderMenu: () => {
+    const s = get();
+    if (!isBuilderEquipped(s.hotbarSlots, s.quickSlot)) return;
+    set({
+      builderOpen: true,
+      builderCategory: s.builderCategory ?? defaultBuilderCategory,
+    });
+  },
+
+  toggleBuilderDeconstruct: () =>
+    set((s) => ({
+      builderMode: s.builderMode === "deconstruct" ? "place" : "deconstruct",
+      builderMoveSourceId: null,
+      builderSelectedPieceId: null,
+    })),
+
+  toggleBuilderMove: () =>
+    set((s) => ({
+      builderMode: s.builderMode === "move" ? "place" : "move",
+      builderMoveSourceId: null,
+    })),
+
+  toggleBuilderSnap: () =>
+    set((s) => ({ builderSnapEnabled: !s.builderSnapEnabled })),
+
+  rotateBuilderPlacement: (delta) =>
+    set((s) => ({
+      builderPlacementYaw: s.builderPlacementYaw + delta * (Math.PI / 2),
+    })),
+
+  cancelBuilderPlacement: () =>
+    set({
+      builderSelectedPieceId: null,
+      builderPlacementPreview: null,
+      builderMode: "place",
+      builderMoveSourceId: null,
+      builderOpen: false,
+    }),
+
+  setBuilderPlacementPreview: (preview) =>
+    set({ builderPlacementPreview: preview }),
+
+  builderTryPrimary: () => {
+    const s = get();
+    if (s.builderMode === "deconstruct") {
+      const target = s.activeInteractable;
+      if (target?.kind === "storage_locker") {
+        const piece = s.placedPieces.find((p) => p.id === target.containerId);
+        if (piece) {
+          const inv = refundPieceIngredients(
+            s.inventory,
+            piece.pieceId,
+            addItem,
+          );
+          const nextPlaced = s.placedPieces.filter((p) => p.id !== piece.id);
+          const { [target.containerId]: _, ...restContainers } = s.containers;
+          set({
+            inventory: inv,
+            placedPieces: nextPlaced,
+            containers: restContainers,
+          });
+        }
+      }
+      return;
+    }
+
+    if (
+      s.builderMode === "move" &&
+      s.builderMoveSourceId &&
+      s.builderPlacementPreview?.valid
+    ) {
+      const src = s.placedPieces.find((p) => p.id === s.builderMoveSourceId);
+      if (!src) return;
+      const nextPlaced = s.placedPieces.map((p) =>
+        p.id === src.id
+          ? {
+              ...p,
+              position: [...s.builderPlacementPreview!.position] as [
+                number,
+                number,
+                number,
+              ],
+              rotationY: s.builderPlacementPreview!.rotationY,
+              wallStack: s.builderPlacementPreview!.wallStack,
+            }
+          : p,
+      );
+      set({
+        placedPieces: nextPlaced,
+        builderMoveSourceId: null,
+        builderMode: "place",
+      });
+      return;
+    }
+
+    if (s.builderMode === "move" && !s.builderMoveSourceId) {
+      const target = s.activeInteractable;
+      if (target?.kind === "storage_locker") {
+        set({ builderMoveSourceId: target.containerId });
+      }
+      return;
+    }
+
+    const pieceId = s.builderSelectedPieceId;
+    const preview = s.builderPlacementPreview;
+    if (!pieceId || !preview?.valid || !isPiecePlaceable(pieceId)) return;
+
+    const afford = canAffordPiece(
+      s.inventory,
+      s.hotbarSlots,
+      pieceId,
+      countOwnedItem,
+    );
+    if (!afford.ok) return;
+
+    const afterInv = consumePieceIngredients(s.inventory, pieceId, removeItem);
+    if (!afterInv) return;
+
+    const id = `placed_${crypto.randomUUID().slice(0, 8)}`;
+    const newPiece: PlacedPiece = {
+      id,
+      pieceId,
+      position: [...preview.position] as [number, number, number],
+      rotationY: preview.rotationY,
+      wallStack: preview.wallStack,
+    };
+    let containers = s.containers;
+    const cDef = pieceCreatesContainer(pieceId);
+    if (cDef) {
+      containers = ensureContainerWithDef(containers, id, cDef);
+    }
+
+    set({
+      inventory: afterInv,
+      placedPieces: [...s.placedPieces, newPiece],
+      containers,
+      builderSelectedPieceId: null,
+      builderPlacementPreview: null,
+    });
+  },
+
+  builderTrySecondary: () => {
+    const s = get();
+    if (s.builderOpen) {
+      s.builderPinHovered();
+      return;
+    }
+    get().openBuilderMenu();
+  },
+
   setStorageOpen: (open) =>
     set({
       storageOpen: open,
@@ -855,7 +1150,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({
       storageOpen: true,
       activeContainerId: containerId,
-      containers: ensureContainer(s.containers, containerId),
+      containers: ensureContainer(
+        s.containers,
+        containerId,
+        containerDefForPlaced(s.placedPieces, containerId),
+      ),
       storageSelected: null,
       storageHover: null,
     });
@@ -865,7 +1164,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     const s = get();
     const id = s.activeContainerId;
     if (!id) return createEmptyContainerSlots("small_locker");
-    return s.containers[id] ?? createEmptyContainerSlots("small_locker");
+    const defId = containerDefForPlaced(s.placedPieces, id);
+    return s.containers[id] ?? createEmptyContainerSlots(defId);
   },
 
   setStorageHover: (hover) => set({ storageHover: hover }),

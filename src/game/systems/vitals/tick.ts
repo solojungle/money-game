@@ -7,6 +7,8 @@ export type VitalsTickSlice = {
   depthM: number;
   hasRebreather: boolean;
   gameMode: GameMode;
+  /** Habitat interior — O₂ refills to full. */
+  inBaseInterior: boolean;
 };
 
 export function createVitalsTick(
@@ -15,10 +17,15 @@ export function createVitalsTick(
 ): TickSystem {
   return (dtMs: number) => {
     const slice = getSlice();
-    const drainPerSec = getO2DrainPerSecond(
-      slice.depthM,
-      slice.hasRebreather,
-    );
+
+    if (slice.inBaseInterior) {
+      if (slice.o2Percent < 100) {
+        patch({ o2Percent: 100 });
+      }
+      return;
+    }
+
+    const drainPerSec = getO2DrainPerSecond(slice.depthM, slice.hasRebreather);
     const delta = (drainPerSec * dtMs) / 1000;
     const next = Math.max(0, slice.o2Percent - delta);
     if (next !== slice.o2Percent) {

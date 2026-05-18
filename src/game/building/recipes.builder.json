@@ -1,0 +1,641 @@
+[
+  {
+    "id": "piece_foundation",
+    "displayName": "Standard Foundation",
+    "description": "Reinforced habitat foundation.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_foundation",
+    "pinBlueprintId": "piece_foundation",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      4,
+      0.5,
+      4
+    ]
+  },
+  {
+    "id": "piece_corridor",
+    "displayName": "Corridor",
+    "description": "Connective passage between rooms.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_corridor",
+    "pinBlueprintId": "piece_corridor",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      2,
+      2
+    ]
+  },
+  {
+    "id": "piece_room",
+    "displayName": "Room",
+    "description": "Expandable living space module.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_room",
+    "pinBlueprintId": "piece_room",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 5
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      5,
+      2.4,
+      4
+    ]
+  },
+  {
+    "id": "piece_half_round_room",
+    "displayName": "Half Round Room",
+    "description": "Curved habitat compartment.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_half_round_room",
+    "pinBlueprintId": "piece_half_round_room",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 4
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      4,
+      2.4,
+      4
+    ]
+  },
+  {
+    "id": "piece_hatch",
+    "displayName": "Hatch",
+    "description": "Provides access to the habitat interior.",
+    "category": "standard_elements",
+    "subsection": "openings",
+    "buildLocation": "base_face",
+    "blueprintId": "piece_hatch",
+    "pinBlueprintId": "piece_hatch",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "quartz",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2.05,
+      2.05,
+      0.72
+    ]
+  },
+  {
+    "id": "piece_window",
+    "displayName": "Window",
+    "description": "Observation window for habitat modules.",
+    "category": "standard_elements",
+    "subsection": "openings",
+    "buildLocation": "base_face",
+    "blueprintId": "piece_window",
+    "pinBlueprintId": "piece_window",
+    "ingredients": [
+      {
+        "itemId": "glass",
+        "count": 1
+      },
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      1,
+      0.15
+    ]
+  },
+  {
+    "id": "piece_interior_door",
+    "displayName": "Interior Door",
+    "description": "Doorway between interior compartments.",
+    "category": "standard_elements",
+    "subsection": "openings",
+    "buildLocation": "base_face",
+    "blueprintId": "piece_interior_door",
+    "pinBlueprintId": "piece_interior_door",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1,
+      2,
+      0.2
+    ]
+  },
+  {
+    "id": "piece_ladder",
+    "displayName": "Ladder",
+    "description": "Connects vertical compartments.",
+    "category": "standard_elements",
+    "subsection": "openings",
+    "buildLocation": "base_face",
+    "blueprintId": "piece_ladder",
+    "pinBlueprintId": "piece_ladder",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.8,
+      2,
+      0.8
+    ]
+  },
+  {
+    "id": "piece_pillar",
+    "displayName": "Pillar",
+    "description": "Structural support column.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_pillar",
+    "pinBlueprintId": "piece_pillar",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.6,
+      2.4,
+      0.6
+    ]
+  },
+  {
+    "id": "piece_fabricator",
+    "displayName": "Fabricator",
+    "description": "Basic survival fabricator.",
+    "category": "interior_facilities",
+    "subsection": "stations",
+    "buildLocation": "interior",
+    "blueprintId": "piece_fabricator",
+    "pinBlueprintId": "piece_fabricator",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      },
+      {
+        "itemId": "table_coral",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.4,
+      1.1,
+      1.4
+    ]
+  },
+  {
+    "id": "piece_modification_station",
+    "displayName": "Modification Station",
+    "description": "Upgrades equipment and modules.",
+    "category": "interior_facilities",
+    "subsection": "stations",
+    "buildLocation": "interior",
+    "blueprintId": "piece_modification_station",
+    "pinBlueprintId": "piece_modification_station",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "wiring",
+        "count": 1
+      }
+    ],
+    "placeable": false
+  },
+  {
+    "id": "piece_interior_wall",
+    "displayName": "Interior Wall",
+    "description": "Partition wall for interior layout.",
+    "category": "interior_facilities",
+    "subsection": "structure",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_interior_wall",
+    "pinBlueprintId": "piece_interior_wall",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      2,
+      0.1
+    ]
+  },
+  {
+    "id": "piece_interior_arch",
+    "displayName": "Interior Arch",
+    "description": "Decorative interior archway.",
+    "category": "interior_facilities",
+    "subsection": "structure",
+    "buildLocation": "interior",
+    "blueprintId": "piece_interior_arch",
+    "pinBlueprintId": "piece_interior_arch",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      2.2,
+      0.3
+    ]
+  },
+  {
+    "id": "piece_solar_panel",
+    "displayName": "Solar Panel",
+    "description": "Generates energy from sunlight.",
+    "category": "exterior_facilities",
+    "subsection": "power",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_solar_panel",
+    "pinBlueprintId": "piece_solar_panel",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "quartz",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.5,
+      0.2,
+      1.5
+    ]
+  },
+  {
+    "id": "piece_duplex_solar",
+    "displayName": "Duplex Solar Panel",
+    "description": "Twin-panel solar generator.",
+    "category": "exterior_facilities",
+    "subsection": "power",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_duplex_solar",
+    "pinBlueprintId": "piece_duplex_solar",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "quartz",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      0.25,
+      1.5
+    ]
+  },
+  {
+    "id": "piece_exterior_wall_light",
+    "displayName": "Exterior Wall Light",
+    "description": "Hull-mounted exterior light.",
+    "category": "exterior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_exterior_wall_light",
+    "pinBlueprintId": "piece_exterior_wall_light",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "glass",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.4,
+      0.4,
+      0.2
+    ]
+  },
+  {
+    "id": "piece_wall_locker",
+    "displayName": "Wall Locker",
+    "description": "Wall-mounted storage. 20 slots.",
+    "category": "utility",
+    "subsection": "storage",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_wall_locker",
+    "pinBlueprintId": "piece_wall_locker",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "containerDefId": "wall_locker",
+    "ghostSize": [
+      1,
+      0.9,
+      0.35
+    ]
+  },
+  {
+    "id": "piece_floor_locker",
+    "displayName": "Floor Locker",
+    "description": "Floor-standing storage. 30 slots.",
+    "category": "utility",
+    "subsection": "storage",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_floor_locker",
+    "pinBlueprintId": "piece_floor_locker",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      },
+      {
+        "itemId": "quartz",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "containerDefId": "floor_locker",
+    "ghostSize": [
+      1,
+      1.2,
+      0.7
+    ]
+  },
+  {
+    "id": "piece_storage_cache",
+    "displayName": "Storage Cache",
+    "description": "Compact interior storage unit.",
+    "category": "utility",
+    "subsection": "storage",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_storage_cache",
+    "pinBlueprintId": "piece_storage_cache",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.8,
+      0.6,
+      0.8
+    ]
+  },
+  {
+    "id": "piece_power_storage",
+    "displayName": "Power Storage",
+    "description": "Stores excess base power.",
+    "category": "utility",
+    "subsection": "power",
+    "buildLocation": "interior",
+    "blueprintId": "piece_power_storage",
+    "pinBlueprintId": "piece_power_storage",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 3
+      },
+      {
+        "itemId": "quartz",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1,
+      1.2,
+      1
+    ]
+  },
+  {
+    "id": "piece_bioreactor",
+    "displayName": "Bioreactor",
+    "description": "Composts organic matter into energy.",
+    "category": "utility",
+    "subsection": "power",
+    "buildLocation": "interior",
+    "blueprintId": "piece_bioreactor",
+    "pinBlueprintId": "piece_bioreactor",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "lubricant",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      1.2,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_power_transmitter",
+    "displayName": "Power Transmitter",
+    "description": "Extends range of power sources.",
+    "category": "utility",
+    "subsection": "power",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_power_transmitter",
+    "pinBlueprintId": "piece_power_transmitter",
+    "ingredients": [
+      {
+        "itemId": "gold",
+        "count": 1
+      },
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.8,
+      1.5,
+      0.8
+    ]
+  },
+  {
+    "id": "piece_growbed",
+    "displayName": "Growbed",
+    "description": "Interior plant cultivation bed.",
+    "category": "cultivation",
+    "subsection": "farming",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_growbed",
+    "pinBlueprintId": "piece_growbed",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      0.4,
+      1
+    ]
+  },
+  {
+    "id": "piece_tall_axum_jar",
+    "displayName": "Tall Axum Jar",
+    "description": "Ornate decorative jar.",
+    "category": "furniture_decor",
+    "subsection": "axum_furniture",
+    "buildLocation": "interior",
+    "blueprintId": "piece_tall_axum_jar",
+    "pinBlueprintId": "piece_tall_axum_jar",
+    "ingredients": [
+      {
+        "itemId": "glass",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 3
+      }
+    ],
+    "placeable": false
+  },
+  {
+    "id": "piece_keep_calm_poster",
+    "displayName": "Keep Calm Poster",
+    "description": "Wall poster.",
+    "category": "furniture_decor",
+    "subsection": "posters",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_keep_calm_poster",
+    "pinBlueprintId": "piece_keep_calm_poster",
+    "ingredients": [
+      {
+        "itemId": "fiber_mesh",
+        "count": 1
+      }
+    ],
+    "placeable": false
+  },
+  {
+    "id": "piece_single_bed",
+    "displayName": "Single Bed",
+    "description": "Rest appliance for time skip.",
+    "category": "furniture_decor",
+    "subsection": "furniture",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_single_bed",
+    "pinBlueprintId": "piece_single_bed",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "fiber_mesh",
+        "count": 3
+      }
+    ],
+    "placeable": false
+  },
+  {
+    "id": "piece_metal_farm",
+    "displayName": "Metal Farm",
+    "description": "Exterior resource cultivation.",
+    "category": "cultivation",
+    "subsection": "farming",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_metal_farm",
+    "pinBlueprintId": "piece_metal_farm",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "copper",
+        "count": 2
+      }
+    ],
+    "placeable": false
+  }
+]

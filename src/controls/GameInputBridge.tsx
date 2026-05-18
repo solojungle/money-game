@@ -2,6 +2,7 @@ import { useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import type { AudioService } from "../audio/audioService";
 import { useGameStore } from "../store/gameStore";
+import { isBuilderEquipped } from "../store/builderActions";
 import {
   edgeActionFromKeyboard,
   mouseActionFromButton,
@@ -34,10 +35,49 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
       const store = useGameStore.getState();
       if (!store.started) return;
 
+      if (e.code === "Escape" && store.builderOpen) {
+        e.preventDefault();
+        store.setBuilderOpen(false);
+        return;
+      }
+
+      if (
+        e.code === "Escape" &&
+        isBuilderEquipped(store.hotbarSlots, store.quickSlot) &&
+        (store.builderSelectedPieceId || store.builderMode !== "place")
+      ) {
+        e.preventDefault();
+        store.cancelBuilderPlacement();
+        return;
+      }
+
+      if (
+        e.code === "KeyG" &&
+        isBuilderEquipped(store.hotbarSlots, store.quickSlot)
+      ) {
+        e.preventDefault();
+        store.toggleBuilderSnap();
+        return;
+      }
+
+      if (
+        e.code === "KeyX" &&
+        isBuilderEquipped(store.hotbarSlots, store.quickSlot)
+      ) {
+        e.preventDefault();
+        store.toggleBuilderMove();
+        return;
+      }
+
       const action = edgeActionFromKeyboard(e.code);
       if (!action) return;
 
-      if (store.pauseOpen || store.fabricatorOpen || store.storageOpen) {
+      if (
+        store.pauseOpen ||
+        store.fabricatorOpen ||
+        store.storageOpen ||
+        store.builderOpen
+      ) {
         return;
       }
 
@@ -93,6 +133,17 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
         return;
       }
 
+      if (store.builderOpen) {
+        if (action === "useLeft") {
+          e.preventDefault();
+          store.builderSelectHovered();
+        } else if (action === "useRight") {
+          e.preventDefault();
+          store.builderPinHovered();
+        }
+        return;
+      }
+
       if (store.storageOpen) {
         return;
       }
@@ -108,7 +159,17 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
         return;
       }
 
+      const builderActive = isBuilderEquipped(
+        store.hotbarSlots,
+        store.quickSlot,
+      );
+
       if (action === "useLeft") {
+        e.preventDefault();
+        if (builderActive) {
+          store.builderTryPrimary();
+          return;
+        }
         const beforeHarvested = store.harvestedIds.length;
         store.onUseLeft();
         const next = useGameStore.getState();
@@ -120,6 +181,11 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
           );
         }
       } else if (action === "useRight") {
+        e.preventDefault();
+        if (builderActive) {
+          store.builderTrySecondary();
+          return;
+        }
         store.toggleFlashlight();
       }
     };
@@ -131,9 +197,21 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
         store.pauseOpen ||
         store.inventoryOpen ||
         store.fabricatorOpen ||
-        store.storageOpen
-      )
+        store.storageOpen ||
+        store.builderOpen
+      ) {
         return;
+      }
+
+      if (
+        isBuilderEquipped(store.hotbarSlots, store.quickSlot) &&
+        store.builderSelectedPieceId
+      ) {
+        e.preventDefault();
+        store.rotateBuilderPlacement(e.deltaY < 0 ? 1 : -1);
+        return;
+      }
+
       e.preventDefault();
       if (e.deltaY < 0) store.cycleQuickSlot(1);
       else if (e.deltaY > 0) store.cycleQuickSlot(-1);
@@ -163,6 +241,7 @@ export function GameInputBridge({ audio }: GameInputBridgeProps) {
         (state.pauseOpen && !prev.pauseOpen) ||
         (state.inventoryOpen && !prev.inventoryOpen) ||
         (state.fabricatorOpen && !prev.fabricatorOpen) ||
+        (state.builderOpen && !prev.builderOpen) ||
         (state.storageOpen && !prev.storageOpen);
       if (menuOpened && document.pointerLockElement === canvas) {
         document.exitPointerLock();

@@ -35,13 +35,15 @@ describe("gameStore play mode", () => {
     });
   });
 
-  it("initializes empty inventory on startGame", () => {
+  it("initializes empty inventory and starter tools on startGame", () => {
     useGameStore.getState().startGame();
     const s = useGameStore.getState();
     expect(s.gameMode).toBe("play");
     expect(s.started).toBe(true);
     expect(s.inventory.filter(Boolean).length).toBe(0);
-    expect(s.hotbarSlots.every((id) => id === null)).toBe(true);
+    expect(s.hotbarSlots[0]).toBe("knife");
+    expect(s.hotbarSlots[1]).toBe("builder");
+    expect(s.hotbarSlots.slice(2).every((id) => id === null)).toBe(true);
     expect(s.hotbarSlots.length).toBe(HOTBAR_SLOT_COUNT);
   });
 });

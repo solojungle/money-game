@@ -4,6 +4,7 @@ import {
   INVENTORY_GRID_ROWS,
 } from "../../../game/systems/inventory";
 import { CONTAINER_DEFS } from "../../../game/systems/storage";
+import { containerDefForPlaced } from "../../../store/builderActions";
 import { useGameStore } from "../../../store/gameStore";
 import { ItemGrid } from "../shared/ItemGrid";
 import { StationFooter, StationFooterAction } from "../shared/StationFooter";
@@ -22,6 +23,7 @@ export function StorageLockerShell() {
   const setStorageOpen = useGameStore((s) => s.setStorageOpen);
   const storageCellClick = useGameStore((s) => s.storageCellClick);
   const setStorageHover = useGameStore((s) => s.setStorageHover);
+  const placedPieces = useGameStore((s) => s.placedPieces);
 
   const onPlayerHover = useCallback(
     (index: number | null) =>
@@ -36,7 +38,8 @@ export function StorageLockerShell() {
 
   if (!open || !activeContainerId || !containerSlots) return null;
 
-  const def = CONTAINER_DEFS.small_locker;
+  const defId = containerDefForPlaced(placedPieces, activeContainerId);
+  const def = CONTAINER_DEFS[defId];
   const playerHover =
     storageHover?.side === "player" ? storageHover.index : null;
   const playerSelected =

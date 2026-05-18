@@ -8,10 +8,19 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { forwardRef, useCallback, useRef } from "react";
 import * as THREE from "three";
 import {
+  interiorFloorY,
+  isInsideBaseInterior,
+} from "../../game/building/interiorVolume";
+import { getSwimProfile } from "../../game/character/profile";
+import {
+  isGroundedOnInteriorFloor,
+  JUMP_VELOCITY,
+  walkHorizontalVelocity,
+} from "../../game/input/locomotion";
+import {
   swimIntentToWorldVelocity,
   type SwimIntent,
 } from "../../game/input/intent";
-import { getSwimProfile } from "../../game/character/profile";
 import { movementAllowed } from "../../game/state/movement";
 import { useGameStore } from "../../store/gameStore";
 import { depthFromPlayerY } from "../../game/presentation/hud";
@@ -25,6 +34,11 @@ type PlayerProps = {
 const _camFwd = new THREE.Vector3();
 const _camRight = new THREE.Vector3();
 const _worldUp = new THREE.Vector3(0, 1, 0);
+
+const SWIM_GRAVITY_SCALE = 0.15;
+const INTERIOR_GRAVITY_SCALE = 1;
+const SWIM_DAMPING = 2.8;
+const INTERIOR_DAMPING = 8;
 
 export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
   { audio },
@@ -46,6 +60,8 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
 
   const [, getKeys] = useKeyboardControls();
   const prevInteract = useRef(false);
+  const prevAscend = useRef(false);
+  const wasInterior = useRef(false);
   const flashlightOn = useGameStore((s) => s.flashlightOn);
 
   useFrame(() => {
@@ -85,6 +101,7 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
     const canMove = movementAllowed(store);
 
     const pos = b.translation();
+    const worldPos: [number, number, number] = [pos.x, pos.y, pos.z];
     store.setPlayerWorldPos({ x: pos.x, y: pos.y, z: pos.z });
     const depth = depthFromPlayerY(pos.y);
     if (depth !== store.depthM) store.setPlayerDepth(depth);
@@ -94,20 +111,58 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
       store.setHeadingDeg(headingDeg);
     }
 
-    if (canMove) {
-      const vel = swimIntentToWorldVelocity(
-        intent,
-        { x: _camFwd.x, z: _camFwd.z },
-        { x: _camRight.x, z: _camRight.z },
-        {
-          baseSpeed: profile.swimSpeed,
-          sprintMult: profile.sprintMult,
-        },
+    const inInterior = isInsideBaseInterior(worldPos, store.placedPieces);
+    if (inInterior !== wasInterior.current) {
+      b.setGravityScale(
+        inInterior ? INTERIOR_GRAVITY_SCALE : SWIM_GRAVITY_SCALE,
+        true,
       );
-      b.setLinvel(vel, true);
+      b.setLinearDamping(inInterior ? INTERIOR_DAMPING : SWIM_DAMPING);
+      wasInterior.current = inInterior;
+    }
+
+    if (canMove) {
+      if (inInterior) {
+        const lv = b.linvel();
+        const horiz = walkHorizontalVelocity(
+          intent,
+          { x: _camFwd.x, z: _camFwd.z },
+          { x: _camRight.x, z: _camRight.z },
+        );
+        const floorY = interiorFloorY(worldPos, store.placedPieces);
+        const feetY = pos.y - profile.capsuleHalfHeight;
+        const grounded =
+          floorY != null &&
+          isGroundedOnInteriorFloor({
+            feetY,
+            floorY,
+            verticalVelocity: lv.y,
+          });
+
+        const jumpEdge = intent.ascend && !prevAscend.current;
+        let vy = lv.y;
+        if (jumpEdge && grounded) {
+          vy = JUMP_VELOCITY;
+        }
+
+        b.setLinvel({ x: horiz.x, y: vy, z: horiz.z }, true);
+      } else {
+        const vel = swimIntentToWorldVelocity(
+          intent,
+          { x: _camFwd.x, z: _camFwd.z },
+          { x: _camRight.x, z: _camRight.z },
+          {
+            baseSpeed: profile.swimSpeed,
+            sprintMult: profile.sprintMult,
+          },
+        );
+        b.setLinvel(vel, true);
+      }
     } else {
       b.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
+
+    prevAscend.current = intent.ascend;
 
     const interactEdge = intent.interact && !prevInteract.current;
     prevInteract.current = intent.interact;
@@ -142,8 +197,8 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
       colliders={false}
       position={[0, 4, 0]}
       enabledRotations={[false, false, false]}
-      linearDamping={2.8}
-      gravityScale={0.15}
+      linearDamping={SWIM_DAMPING}
+      gravityScale={SWIM_GRAVITY_SCALE}
       userData={{ role: "player" }}
     >
       <CapsuleCollider

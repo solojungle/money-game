@@ -2,6 +2,8 @@ import { useGameAudio } from "./audio/useGameAudio";
 import { usePdaKeyboard } from "./controls/usePdaKeyboard";
 import { GameScene } from "./components/scene/GameScene";
 import { GameHUD } from "./components/hud/GameHUD";
+import { BuilderShell } from "./components/hud/builder/BuilderShell";
+import { BuildModePrompts } from "./components/hud/builder/BuildModePrompts";
 import { FabricatorShell } from "./components/hud/fabricator/FabricatorShell";
 import { InventoryScreen } from "./components/hud/InventoryScreen";
 import { StorageLockerShell } from "./components/hud/storage/StorageLockerShell";
@@ -18,8 +20,9 @@ function App() {
   const startGame = useGameStore((s) => s.startGame);
   const inventoryOpen = useGameStore((s) => s.inventoryOpen);
   const fabricatorOpen = useGameStore((s) => s.fabricatorOpen);
+  const builderOpen = useGameStore((s) => s.builderOpen);
   const storageOpen = useGameStore((s) => s.storageOpen);
-  const stationOpen = fabricatorOpen || storageOpen;
+  const stationOpen = fabricatorOpen || builderOpen || storageOpen;
 
   return (
     <div
@@ -35,6 +38,8 @@ function App() {
       {started && <PauseMenu />}
       <InventoryScreen />
       <FabricatorShell />
+      <BuilderShell />
+      <BuildModePrompts />
       <StorageLockerShell />
     </div>
   );

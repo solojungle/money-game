@@ -334,7 +334,23 @@ Footer actions use `InputPrompt` bindings (`fabricatorCraft` → mouse left, `fa
 
 ---
 
-## 12. Storage transfer
+## 12. Habitat Builder (builder menu)
+
+Reference: SN2 builder screenshot; data in [`docs/subnautica-2-building.md`](docs/subnautica-2-building.md).
+
+| Element | Spec |
+|---------|------|
+| Layout | Horizontal **category tabs** (orange active underline) + left recipe grid + right detail |
+| Transparency | Lighter scrim/panels than fabricator (~45% navy, world visible) |
+| Detail | Orange title, italic build-location line, ingredient `have/need` |
+| Footer | CLOSE (Esc), SELECT (LMB), PIN RECIPE (RMB) |
+| Build HUD | PLACE, ROTATE (wheel), TOGGLE SNAPPING (G), CANCEL (Esc), DECONSTRUCT (Q), MOVE (X), OPEN MENU (RMB) |
+
+**Component:** `BuilderShell.tsx` + `BuildModePrompts.tsx` + `builder.css`
+
+---
+
+## 13. Storage transfer
 
 Reference: `assets/Screenshot_2026-05-18_at_1.37.16_PM-*.png`
 
@@ -348,7 +364,7 @@ Reference: `assets/Screenshot_2026-05-18_at_1.37.16_PM-*.png`
 
 ---
 
-## 13. What we are *not* matching in v1
+## 14. What we are *not* matching in v1
 
 - Final Subnautica creature meshes or PBR materials
 - Exact SN2 font files (use Inter / Rajdhani / similar geometric sans until licensed)

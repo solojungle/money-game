@@ -20,7 +20,10 @@ export function usePdaKeyboard() {
         }
         if (
           !store.pauseOpen &&
-          (store.fabricatorOpen || store.storageOpen || store.inventoryOpen)
+          (store.fabricatorOpen ||
+            store.builderOpen ||
+            store.storageOpen ||
+            store.inventoryOpen)
         ) {
           return;
         }
@@ -32,6 +35,11 @@ export function usePdaKeyboard() {
         if (store.fabricatorOpen) {
           e.preventDefault();
           store.setFabricatorOpen(false);
+          return;
+        }
+        if (store.builderOpen) {
+          e.preventDefault();
+          store.setBuilderOpen(false);
           return;
         }
         if (store.storageOpen) {

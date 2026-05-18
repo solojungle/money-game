@@ -10,6 +10,7 @@ describe("vitals tick", () => {
         depthM: 30,
         hasRebreather: false,
         gameMode: "play",
+        inBaseInterior: false,
       }),
       (next) => {
         if (next.o2Percent !== undefined) o2 = next.o2Percent;
@@ -17,5 +18,23 @@ describe("vitals tick", () => {
     );
     tick(1000);
     expect(o2).toBeLessThan(100);
+  });
+
+  it("refills O₂ to 100 inside base interior", () => {
+    let o2 = 40;
+    const tick = createVitalsTick(
+      () => ({
+        o2Percent: o2,
+        depthM: 30,
+        hasRebreather: false,
+        gameMode: "play",
+        inBaseInterior: true,
+      }),
+      (next) => {
+        if (next.o2Percent !== undefined) o2 = next.o2Percent;
+      },
+    );
+    tick(16);
+    expect(o2).toBe(100);
   });
 });

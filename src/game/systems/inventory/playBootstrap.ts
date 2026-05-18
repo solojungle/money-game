@@ -1,6 +1,7 @@
 import blueprintData from "../../progression/blueprints.json";
 import type { BlueprintId } from "../../_kernel/types";
 import { FABRICATOR_STARTER_UNLOCK_IDS } from "../crafting";
+import { BUILDER_STARTER_UNLOCK_IDS } from "../../building";
 import { unlockBlueprint, resetProgressionState } from "../progression";
 import {
   createEmptyInventory,
@@ -23,6 +24,12 @@ export function bootstrapPlayProgression(): BlueprintId[] {
     ids.push(id);
   }
   for (const id of FABRICATOR_STARTER_UNLOCK_IDS) {
+    if (!ids.includes(id)) {
+      unlockBlueprint(id, undefined, "BUILDER TOOL");
+      ids.push(id);
+    }
+  }
+  for (const id of BUILDER_STARTER_UNLOCK_IDS) {
     if (!ids.includes(id)) {
       unlockBlueprint(id, undefined, "BUILDER TOOL");
       ids.push(id);

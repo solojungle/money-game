@@ -9,6 +9,7 @@ import {
 import { useGameStore } from "../../../store/gameStore";
 import { ItemGrid } from "../shared/ItemGrid";
 import { PanelTitle } from "../shared/PanelTitle";
+import { EquipSlotIcon } from "./EquipSlotIcon";
 import { ItemIconView } from "./ItemIconView";
 import { ItemTooltip } from "./ItemTooltip";
 import "./pda.css";
@@ -62,12 +63,17 @@ function EquipmentSlotView({
         }
       }}
     >
+      <EquipSlotIcon slot={slot} />
       {locked && (
         <span className="pda-equip__lock" aria-hidden>
           🔒
         </span>
       )}
-      {filled && <ItemIconView itemId={state.itemId} size="sm" />}
+      {filled && (
+        <span className="pda-equip__item">
+          <ItemIconView itemId={state.itemId} size="sm" />
+        </span>
+      )}
     </button>
   );
 }
@@ -186,28 +192,37 @@ export function PdaTabInventory() {
         <div className="pda-panel pda-panel--equip">
           <PanelTitle title="EQUIPPED" />
           <div className="pda-panel__body pda-panel__body--equip">
-            <div className="pda-equip__status" aria-hidden>
-              <span className="pda-equip__status-icon pda-equip__status-icon--speed" />
-              <span className="pda-equip__status-icon pda-equip__status-icon--boost" />
-            </div>
             <div className="pda-equip__stage">
               <div className="pda-equip__grid-bg" aria-hidden />
-              <div className="pda-equip__mannequin" aria-hidden>
-                <span className="pda-equip__torso" />
-                <span className="pda-equip__leg pda-equip__leg--l" />
-                <span className="pda-equip__leg pda-equip__leg--r" />
-                <span className="pda-equip__arm pda-equip__arm--l" />
-                <span className="pda-equip__arm pda-equip__arm--r" />
-              </div>
-              {EQUIPMENT_LAYOUT.map(({ slot, label, className }) => (
+              <div className="pda-equip__layout">
+                {EQUIPMENT_LAYOUT.filter(({ slot }) => slot !== "fins").map(
+                  ({ slot, label, className }) => (
+                    <EquipmentSlotView
+                      key={slot}
+                      slot={slot}
+                      state={equipment[slot]}
+                      label={label}
+                      className={className}
+                    />
+                  ),
+                )}
+                <div className="pda-equip__figure" aria-hidden>
+                  <div className="pda-equip__mannequin">
+                    <span className="pda-equip__head" />
+                    <span className="pda-equip__torso" />
+                    <span className="pda-equip__leg pda-equip__leg--l" />
+                    <span className="pda-equip__leg pda-equip__leg--r" />
+                    <span className="pda-equip__arm pda-equip__arm--l" />
+                    <span className="pda-equip__arm pda-equip__arm--r" />
+                  </div>
+                </div>
                 <EquipmentSlotView
-                  key={slot}
-                  slot={slot}
-                  state={equipment[slot]}
-                  label={label}
-                  className={className}
+                  slot="fins"
+                  state={equipment.fins}
+                  label="Fins"
+                  className="pda-equip__slot--fins"
                 />
-              ))}
+              </div>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ export type SystemsStoreSlice = {
   depthM: number;
   hasRebreather: boolean;
   gameMode: GameMode;
+  inBaseInterior: boolean;
 };
 
 let vitalsUnsub: (() => void) | null = null;
@@ -16,10 +17,7 @@ export function initGameSystems(
   patch: (partial: Partial<SystemsStoreSlice>) => void,
 ): void {
   disposeGameSystems();
-  vitalsUnsub = registerSystem(
-    createVitalsTick(getSlice, patch),
-    10,
-  );
+  vitalsUnsub = registerSystem(createVitalsTick(getSlice, patch), 10);
 }
 
 export function disposeGameSystems(): void {

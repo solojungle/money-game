@@ -241,8 +241,8 @@
 
 .pda-panel--equip {
   flex: 0 1 auto;
-  min-width: min(26rem, 44vw);
-  max-width: 30rem;
+  min-width: min(13rem, 28vw);
+  max-width: 16rem;
 }
 
 .pda-tab-inventory__tooltip {
@@ -352,39 +352,15 @@
 }
 
 /* Equipment */
-.pda-equip__status {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 0.65rem;
-  flex-shrink: 0;
-  width: 100%;
-}
-
-.pda-equip__status-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.pda-equip__status-icon--speed {
-  background: radial-gradient(circle at 40% 40%, #26a69a, #0d4f4a);
-}
-
-.pda-equip__status-icon--boost {
-  background: radial-gradient(circle at 40% 40%, #f57c00, #9a3412);
-}
-
 .pda-equip__stage {
   position: relative;
   flex: 0 0 auto;
   width: 100%;
-  min-height: 22rem;
+  min-height: 20rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.85rem 0.65rem 0.75rem;
   border-radius: 14px;
   border: 1px solid rgba(38, 166, 154, 0.55);
   background: var(--menu-panel);
@@ -393,108 +369,187 @@
 
 .pda-equip__grid-bg {
   position: absolute;
-  inset: 12% 8%;
+  inset: 10% 6%;
   background-image:
     linear-gradient(rgba(38, 166, 154, 0.12) 1px, transparent 1px),
     linear-gradient(90deg, rgba(38, 166, 154, 0.12) 1px, transparent 1px);
   background-size: 1rem 1rem;
   border-radius: 8px;
   opacity: 0.7;
+  pointer-events: none;
+}
+
+.pda-equip__layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 3rem minmax(4.5rem, 1fr) 3rem;
+  grid-template-rows: 3rem minmax(8.5rem, 1fr) 3rem 3rem;
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+  max-width: 12.5rem;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.pda-equip__figure {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
 }
 
 .pda-equip__mannequin {
   position: relative;
-  width: 6rem;
-  height: 11rem;
-  z-index: 1;
+  width: 4.75rem;
+  height: 11.5rem;
+}
+
+.pda-equip__head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #e2e8f0 0%, #94a3b8 72%, #64748b 100%);
+  box-shadow:
+    inset 0 -3px 6px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(226, 232, 240, 0.15);
+}
+
+.pda-equip__head::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  left: 18%;
+  right: 18%;
+  height: 38%;
+  border-radius: 50% 50% 35% 35%;
+  background: rgba(248, 250, 252, 0.35);
 }
 
 .pda-equip__torso {
   position: absolute;
   left: 50%;
-  top: 22%;
+  top: 17%;
   transform: translateX(-50%);
-  width: 2.4rem;
-  height: 3.6rem;
-  border-radius: 1rem;
-  background: linear-gradient(160deg, #26a69a, #f57c00 90%);
+  width: 2.15rem;
+  height: 3.35rem;
+  border-radius: 0.9rem 0.9rem 0.55rem 0.55rem;
+  background: linear-gradient(160deg, #26a69a, #1a7a72 55%, #f57c00 92%);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .pda-equip__leg {
   position: absolute;
-  top: 58%;
-  width: 0.85rem;
-  height: 3.2rem;
-  border-radius: 0.4rem;
+  top: 54%;
+  width: 0.75rem;
+  height: 3.35rem;
+  border-radius: 0.35rem;
   background: linear-gradient(180deg, #26a69a, #e2e8f0 70%);
 }
 
 .pda-equip__leg--l {
-  left: 28%;
+  left: 30%;
 }
 
 .pda-equip__leg--r {
-  right: 28%;
+  right: 30%;
 }
 
 .pda-equip__arm {
   position: absolute;
-  top: 28%;
-  width: 0.65rem;
-  height: 2.4rem;
-  border-radius: 0.35rem;
+  top: 24%;
+  width: 0.58rem;
+  height: 2.25rem;
+  border-radius: 0.3rem;
   background: linear-gradient(180deg, #f57c00, #26a69a);
 }
 
 .pda-equip__arm--l {
-  left: 8%;
+  left: 10%;
   transform: rotate(12deg);
 }
 
 .pda-equip__arm--r {
-  right: 8%;
+  right: 10%;
   transform: rotate(-12deg);
 }
 
 .pda-equip__slot {
-  position: absolute;
-  width: 3.1rem;
-  height: 3.1rem;
+  position: relative;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   border: 2px solid rgba(38, 166, 154, 0.65);
   background: var(--menu-surface-alt);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
   cursor: pointer;
   padding: 0;
+  justify-self: center;
+  align-self: center;
 }
 
 .pda-equip__slot--head {
-  top: 4%;
-  left: 12%;
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .pda-equip__slot--tank {
-  top: 8%;
-  right: 10%;
+  grid-column: 3;
+  grid-row: 1;
 }
 
 .pda-equip__slot--suit {
-  bottom: 38%;
-  left: 6%;
+  grid-column: 1;
+  grid-row: 3;
 }
 
 .pda-equip__slot--gloves {
-  bottom: 38%;
-  right: 6%;
+  grid-column: 3;
+  grid-row: 3;
 }
 
 .pda-equip__slot--fins {
-  bottom: 6%;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-column: 2;
+  grid-row: 4;
+}
+
+.pda-equip__slot-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  color: rgba(226, 232, 240, 0.55);
+  pointer-events: none;
+}
+
+.pda-equip__slot-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pda-equip__slot:has(.pda-equip__item) .pda-equip__slot-icon {
+  opacity: 0;
+}
+
+.pda-equip__slot--locked .pda-equip__slot-icon {
+  opacity: 0.35;
+}
+
+.pda-equip__item {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pda-equip__slot--locked {
@@ -507,7 +562,10 @@
 }
 
 .pda-equip__lock {
+  position: absolute;
+  z-index: 3;
   font-size: 0.85rem;
+  line-height: 1;
 }
 
 /* PDA hotbar row */

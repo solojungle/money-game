@@ -231,6 +231,7 @@ Each module: **goal → requirements → deps → out of scope (v1)**.
 - **Not v1:** Full ecosystem sim.
 
 ### 8.5 Base Building
+- **Reference:** [`docs/subnautica-2-building.md`](docs/subnautica-2-building.md) — SN2 recipes, placement rules, locker scale.
 - **Goal:** Expressive habitats with SN1 function.
 - **Req:** Hull integrity + power grid, rooms (I/L/multi-height), glass floors/roofs, curved segments (or snap arcs), hatch/airlock, grow bed, water filter, alien tank/aquarium, bed → time skip, interior paint/lights; **Lightning Rod** exterior module (storm-charge → battery, §6.1).
 - **Deps:** Snap grid, ghost placement, save structure per base, weather service.

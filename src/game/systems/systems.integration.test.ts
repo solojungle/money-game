@@ -18,6 +18,7 @@ describe("game systems integration", () => {
         depthM: 20,
         hasRebreather: false,
         gameMode: "play",
+        inBaseInterior: false,
       }),
       (partial) => {
         if (partial.o2Percent !== undefined) o2 = partial.o2Percent;

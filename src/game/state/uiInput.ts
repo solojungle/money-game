@@ -2,12 +2,14 @@
 export function uiCapturesInput(slice: {
   inventoryOpen: boolean;
   fabricatorOpen: boolean;
+  builderOpen: boolean;
   storageOpen: boolean;
   pauseOpen: boolean;
 }): boolean {
   return (
     slice.inventoryOpen ||
     slice.fabricatorOpen ||
+    slice.builderOpen ||
     slice.storageOpen ||
     slice.pauseOpen
   );

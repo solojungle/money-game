@@ -42,7 +42,7 @@ function SceneContent({
   audio,
 }: SceneContentProps & { paused: boolean }) {
   const playerRef = useRef<RapierRigidBody>(null);
-  const fogColor = "#0a1628";
+  const fogColor = "#5bc3ac";
 
   return (
     <>

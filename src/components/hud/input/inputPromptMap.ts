@@ -10,6 +10,11 @@ export const INPUT_PROMPT_SRC: Record<ControlBinding, string> = {
   fabricatorCraft: "/ui/input-prompts/mouse_left.svg",
   /** Maps to secondary interact (mouse right / future rebind). */
   fabricatorPin: "/ui/input-prompts/mouse_right.svg",
+  builderPin: "/ui/input-prompts/mouse_right.svg",
+  builderPlace: "/ui/input-prompts/mouse_left.svg",
+  builderRotate: "/ui/input-prompts/mouse_wheel.svg",
+  builderToggleSnap: "/ui/input-prompts/keyboard_g.svg",
+  builderMove: "/ui/input-prompts/keyboard_x.svg",
   useLeft: "/ui/input-prompts/mouse_left.svg",
   useRight: "/ui/input-prompts/mouse_right.svg",
   loadTool: "/ui/input-prompts/keyboard_f.svg",

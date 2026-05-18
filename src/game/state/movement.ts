@@ -4,6 +4,7 @@ import { uiCapturesInput } from "./uiInput";
 export function movementAllowed(slice: {
   inventoryOpen: boolean;
   fabricatorOpen: boolean;
+  builderOpen: boolean;
   storageOpen: boolean;
   pauseOpen: boolean;
 }): boolean {

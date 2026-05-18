@@ -4,6 +4,7 @@ import {
   resolveInteractionPrompt,
 } from "../../game/presentation/hud/resolveInteractionPrompt";
 import { useGameStore } from "../../store/gameStore";
+import { isBuilderEquipped } from "../../store/builderActions";
 import { BlueprintToastStack } from "./BlueprintToast";
 import { PickupFloatStack } from "./PickupFloat";
 import { CompassDepth } from "./CompassDepth";
@@ -27,10 +28,25 @@ export function GameHUD() {
   const nearDeath = useGameStore((s) => s.nearDeath);
   const inventoryOpen = useGameStore((s) => s.inventoryOpen);
 
+  const builderSelectedPieceId = useGameStore((s) => s.builderSelectedPieceId);
+  const builderMode = useGameStore((s) => s.builderMode);
+
   const prompt = useMemo(() => {
     const equipped = getEquippedToolId(hotbarSlots, quickSlot);
+    if (
+      isBuilderEquipped(hotbarSlots, quickSlot) &&
+      (builderSelectedPieceId || builderMode !== "place")
+    ) {
+      return null;
+    }
     return resolveInteractionPrompt(activeInteractable, equipped);
-  }, [activeInteractable, hotbarSlots, quickSlot]);
+  }, [
+    activeInteractable,
+    hotbarSlots,
+    quickSlot,
+    builderSelectedPieceId,
+    builderMode,
+  ]);
 
   if (!started) return null;
 

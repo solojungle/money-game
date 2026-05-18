@@ -77,11 +77,27 @@ export const SaveSchemaV4 = SaveSchemaV3.omit({ version: true }).extend({
 
 export type SaveSnapshotV4 = z.infer<typeof SaveSchemaV4>;
 
+const PlacedPieceSchema = z.object({
+  id: z.string(),
+  pieceId: z.string(),
+  position: z.tuple([z.number(), z.number(), z.number()]),
+  rotationY: z.number(),
+  wallStack: z.number().int().min(0).optional(),
+});
+
+export const SaveSchemaV5 = SaveSchemaV4.omit({ version: true }).extend({
+  version: z.literal(5),
+  placedPieces: z.array(PlacedPieceSchema).optional(),
+});
+
+export type SaveSnapshotV5 = z.infer<typeof SaveSchemaV5>;
+
 export type SaveSnapshot =
   | SaveSnapshotV1
   | SaveSnapshotV2
   | SaveSnapshotV3
-  | SaveSnapshotV4;
+  | SaveSnapshotV4
+  | SaveSnapshotV5;
 
 export function parseSaveV1(json: unknown): SaveSnapshotV1 | null {
   const r = SaveSchemaV1.safeParse(json);
@@ -100,6 +116,11 @@ export function parseSaveV3(json: unknown): SaveSnapshotV3 | null {
 
 export function parseSaveV4(json: unknown): SaveSnapshotV4 | null {
   const r = SaveSchemaV4.safeParse(json);
+  return r.success ? r.data : null;
+}
+
+export function parseSaveV5(json: unknown): SaveSnapshotV5 | null {
+  const r = SaveSchemaV5.safeParse(json);
   return r.success ? r.data : null;
 }
 
@@ -150,9 +171,18 @@ export function migrateV3ToV4(v3: SaveSnapshotV3): SaveSnapshotV4 {
   };
 }
 
+export function migrateV4ToV5(v4: SaveSnapshotV4): SaveSnapshotV5 {
+  return {
+    ...v4,
+    version: 5,
+    placedPieces: [],
+  };
+}
+
 export function parseSave(json: unknown): SaveSnapshot | null {
   if (typeof json !== "object" || json === null) return null;
   const version = (json as { version?: number }).version;
+  if (version === 5) return parseSaveV5(json);
   if (version === 4) return parseSaveV4(json);
   if (version === 3) return parseSaveV3(json);
   if (version === 2) {
@@ -183,20 +213,23 @@ export function migrateV1ToV2(): SaveSnapshotV2 {
   };
 }
 
-export function normalizeSave(json: unknown): SaveSnapshotV4 | null {
+export function normalizeSave(json: unknown): SaveSnapshotV5 | null {
   const parsed = parseSave(json);
   if (!parsed) return null;
-  if (parsed.version === 4) return parsed;
-  if (parsed.version === 3) return migrateV3ToV4(parsed);
-  if (parsed.version === 2) return migrateV3ToV4(migrateV2ToV3(parsed));
-  return migrateV3ToV4(migrateV2ToV3(migrateV1ToV2()));
+  if (parsed.version === 5) return parsed;
+  if (parsed.version === 4) return migrateV4ToV5(parsed);
+  if (parsed.version === 3) return migrateV4ToV5(migrateV3ToV4(parsed));
+  if (parsed.version === 2) {
+    return migrateV4ToV5(migrateV3ToV4(migrateV2ToV3(parsed)));
+  }
+  return migrateV4ToV5(migrateV3ToV4(migrateV2ToV3(migrateV1ToV2())));
 }
 
-export function serializeSave(snapshot: SaveSnapshotV4): string {
+export function serializeSave(snapshot: SaveSnapshotV5): string {
   return JSON.stringify(snapshot);
 }
 
-export function deserializeSave(raw: string): SaveSnapshotV4 | null {
+export function deserializeSave(raw: string): SaveSnapshotV5 | null {
   try {
     return normalizeSave(JSON.parse(raw) as unknown);
   } catch {

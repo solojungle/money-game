@@ -4,6 +4,7 @@ import {
   migrateV1ToV2,
   migrateV2ToV3,
   migrateV3ToV4,
+  migrateV4ToV5,
   normalizeSave,
   parseSaveV1,
   serializeSave,
@@ -46,18 +47,20 @@ describe("migrateV1ToV2", () => {
 });
 
 describe("normalizeSave", () => {
-  it("roundtrips v4 play save", () => {
-    const raw = serializeSave(migrateV3ToV4(v3Play));
+  it("roundtrips v5 play save", () => {
+    const raw = serializeSave(migrateV4ToV5(migrateV3ToV4(v3Play)));
     const loaded = normalizeSave(JSON.parse(raw));
+    expect(loaded?.version).toBe(5);
     expect(loaded?.gameMode).toBe("play");
     expect(loaded?.teamTech).toEqual(["seaglide"]);
     expect(loaded?.flashlightOn).toBe(true);
     expect(loaded?.hotbarSlots.length).toBe(5);
+    expect(loaded?.placedPieces).toEqual([]);
   });
 
-  it("migrates v2 to v3", () => {
+  it("migrates v2 to v5", () => {
     const loaded = normalizeSave(v2Play);
-    expect(loaded?.version).toBe(4);
+    expect(loaded?.version).toBe(5);
     expect(loaded?.inventory).toEqual(v2Play.inventory);
   });
 

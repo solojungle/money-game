@@ -1,0 +1,8 @@
+{
+  "id": "M04",
+  "domain": "SYSTEMS",
+  "ownedPaths": ["src/game/systems/progression/**", "src/game/progression/**"],
+  "publicEntry": "src/game/systems/progression/index.ts",
+  "dependsOn": ["CORE"],
+  "siblings": ["M02", "M03", "M15", "M14"]
+}

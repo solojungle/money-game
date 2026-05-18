@@ -16,6 +16,8 @@ npm run dev
 
 Open the URL Vite prints (usually `http://localhost:5173`).
 
+**How to play:** Main menu → **Play Single Player** → click the scene to capture the mouse, then swim with **WASD**, **Space**/**C** up/down, **Shift** to sprint, **Tab** for inventory, **E** to interact. See [`game.md`](game.md) §2.1 for full SN1-style controls.
+
 ## Other commands
 
 | Command | Description |

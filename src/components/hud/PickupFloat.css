@@ -1,0 +1,39 @@
+.pickup-float-stack {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  pointer-events: none;
+  transform: translate(-50%, -2.5rem);
+}
+
+.pickup-float {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #e0f7fa;
+  text-shadow:
+    0 0 12px rgba(0, 242, 255, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.8);
+  font-variant-numeric: tabular-nums;
+  animation: pickup-float-rise 700ms ease-out forwards;
+}
+
+@keyframes pickup-float-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scale(1);
+  }
+}

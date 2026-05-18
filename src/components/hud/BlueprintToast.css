@@ -1,0 +1,129 @@
+.blueprint-toast-stack {
+  position: fixed;
+  top: 1.25rem;
+  left: 1rem;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  pointer-events: none;
+  max-width: min(540px, calc(100vw - 2rem));
+}
+
+.blueprint-toast {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 0.35rem 0.85rem;
+  padding: 0.75rem 1rem 0.85rem 1.35rem;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 26, 32, 0.92) 0%,
+    rgba(8, 26, 32, 0.88) 100%
+  );
+  border-top: 1px solid rgba(0, 242, 255, 0.6);
+  box-shadow: 0 0 24px rgba(0, 200, 255, 0.15);
+  pointer-events: auto;
+  animation: blueprint-toast-enter 200ms ease-out forwards;
+}
+
+.blueprint-toast--exit {
+  animation: blueprint-toast-exit 150ms ease-in forwards;
+}
+
+@keyframes blueprint-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes blueprint-toast-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.blueprint-toast__tab {
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 32px;
+  border-radius: 4px;
+  background: #00f2ff;
+}
+
+.blueprint-toast__header {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(0, 242, 255, 0.35);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f8fafc;
+}
+
+.blueprint-toast__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blueprint-toast__icon-box {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.blueprint-toast__title {
+  align-self: center;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.blueprint-toast__footer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.85);
+}
+
+.blueprint-toast__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-weight: 600;
+}

@@ -1,0 +1,20 @@
+/** Bindings that map to input prompt artwork. */
+export type ControlBinding =
+  | "holster"
+  | "pda"
+  | "stationClose"
+  | "fabricatorCraft"
+  | "fabricatorPin"
+  | "useLeft"
+  | "useRight"
+  | "loadTool"
+  | "reload"
+  | "deconstruct"
+  | "slot1"
+  | "slot2"
+  | "slot3"
+  | "slot4"
+  | "slot5"
+  | "slot6"
+  | "slot7"
+  | "slot8";

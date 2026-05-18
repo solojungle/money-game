@@ -1,0 +1,418 @@
+[
+  {
+    "id": "recipe_knife",
+    "displayName": "Survival Multitool",
+    "description": "Standard issue pioneer tool for harvesting tougher materials.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "tools",
+    "blueprintId": "recipe_knife",
+    "pinBlueprintId": "recipe_knife",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      }
+    ],
+    "output": {
+      "itemId": "knife",
+      "count": 1
+    },
+    "craftDurationMs": 3000
+  },
+  {
+    "id": "recipe_scanner",
+    "displayName": "Scanner",
+    "description": "Scans fragments and fauna to unlock blueprints.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "tools",
+    "blueprintId": "recipe_scanner",
+    "pinBlueprintId": "recipe_scanner",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "battery",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "scanner",
+      "count": 1
+    },
+    "craftDurationMs": 3000
+  },
+  {
+    "id": "recipe_builder",
+    "displayName": "Habitat Builder",
+    "description": "Fabricates seabases and exterior modules.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "tools",
+    "blueprintId": "recipe_builder",
+    "pinBlueprintId": "recipe_builder",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "battery",
+        "count": 1
+      },
+      {
+        "itemId": "computer_chip",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "builder",
+      "count": 1
+    },
+    "craftDurationMs": 3500
+  },
+  {
+    "id": "recipe_repair_tool",
+    "displayName": "Repair Tool",
+    "description": "Repairs vehicles and habitat modules.",
+    "station": "fabricator",
+    "fabricatorTier": "seabase",
+    "category": "personal",
+    "subsection": "tools",
+    "blueprintId": "recipe_repair_tool",
+    "pinBlueprintId": "recipe_repair_tool",
+    "ingredients": [
+      {
+        "itemId": "titanium_ingot",
+        "count": 1
+      },
+      {
+        "itemId": "wiring",
+        "count": 1
+      },
+      {
+        "itemId": "battery",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "repair_tool",
+      "count": 1
+    },
+    "craftDurationMs": 4000
+  },
+  {
+    "id": "recipe_fins",
+    "displayName": "Fins",
+    "description": "Convert leg motion into thrust underwater.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "equipment",
+    "blueprintId": "recipe_fins",
+    "pinBlueprintId": "recipe_fins",
+    "ingredients": [
+      {
+        "itemId": "silicone",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "fins",
+      "count": 1
+    },
+    "craftDurationMs": 2500
+  },
+  {
+    "id": "recipe_rebreather",
+    "displayName": "Rebreather",
+    "description": "Filters oxygen from seawater for extended dives.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "equipment",
+    "blueprintId": "recipe_rebreather",
+    "pinBlueprintId": "recipe_rebreather",
+    "ingredients": [
+      {
+        "itemId": "fiber_mesh",
+        "count": 1
+      },
+      {
+        "itemId": "wiring",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "rebreather",
+      "count": 1
+    },
+    "craftDurationMs": 3000
+  },
+  {
+    "id": "recipe_tank",
+    "displayName": "Standard O₂ Tank",
+    "description": "Composite oxygen tank. Do not drop.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "equipment",
+    "blueprintId": "standard_oxygen_tank",
+    "pinBlueprintId": "standard_oxygen_tank",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "glass",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "tank",
+      "count": 1
+    },
+    "craftDurationMs": 3000
+  },
+  {
+    "id": "recipe_seaglide",
+    "displayName": "Seaglide",
+    "description": "Personal propulsion device for fast surface travel.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "personal",
+    "subsection": "equipment",
+    "blueprintId": "seaglide",
+    "pinBlueprintId": "seaglide",
+    "ingredients": [
+      {
+        "itemId": "battery",
+        "count": 1
+      },
+      {
+        "itemId": "lubricant",
+        "count": 1
+      },
+      {
+        "itemId": "copper_wire",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "seaglide",
+      "count": 1
+    },
+    "craftDurationMs": 3500
+  },
+  {
+    "id": "recipe_titanium_ingot",
+    "displayName": "Titanium Ingot",
+    "description": "Ti. Condensed building material.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "basic_materials",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 10
+      }
+    ],
+    "output": {
+      "itemId": "titanium_ingot",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_copper_wire",
+    "displayName": "Copper Wire",
+    "description": "Used in all kinds of electronics.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "basic_materials",
+    "ingredients": [
+      {
+        "itemId": "copper",
+        "count": 2
+      }
+    ],
+    "output": {
+      "itemId": "copper_wire",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_wiring",
+    "displayName": "Wiring Kit",
+    "description": "Used in crafting and repairing electronics.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "electronics",
+    "ingredients": [
+      {
+        "itemId": "silver",
+        "count": 2
+      }
+    ],
+    "output": {
+      "itemId": "wiring",
+      "count": 1
+    },
+    "craftDurationMs": 2500
+  },
+  {
+    "id": "recipe_battery",
+    "displayName": "Battery",
+    "description": "Powers handheld devices.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "electronics",
+    "ingredients": [
+      {
+        "itemId": "copper",
+        "count": 2
+      },
+      {
+        "itemId": "quartz",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "battery",
+      "count": 1
+    },
+    "craftDurationMs": 2500
+  },
+  {
+    "id": "recipe_glass",
+    "displayName": "Glass",
+    "description": "SiO₂. Silicon-based glass.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "basic_materials",
+    "ingredients": [
+      {
+        "itemId": "quartz",
+        "count": 2
+      }
+    ],
+    "output": {
+      "itemId": "glass",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_fiber_mesh",
+    "displayName": "Fiber Mesh",
+    "description": "Natural fiber. Base material for fabrics.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "basic_materials",
+    "ingredients": [
+      {
+        "itemId": "creepvine",
+        "count": 2
+      }
+    ],
+    "output": {
+      "itemId": "fiber_mesh",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_silicone",
+    "displayName": "Silicone Rubber",
+    "description": "Synthetic rubber-based resin.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "resources",
+    "subsection": "basic_materials",
+    "ingredients": [
+      {
+        "itemId": "creepvine",
+        "count": 2
+      }
+    ],
+    "output": {
+      "itemId": "silicone",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_water",
+    "displayName": "Filtered Water",
+    "description": "H₂O. Decontaminated and drinkable.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "sustenance",
+    "subsection": "water",
+    "ingredients": [
+      {
+        "itemId": "table_coral",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "water",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  },
+  {
+    "id": "recipe_cured_fish",
+    "displayName": "Cured Fish",
+    "description": "Salt-cured and dehydrated. Edible.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "sustenance",
+    "subsection": "prepared_meals",
+    "ingredients": [
+      {
+        "itemId": "creepvine",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "cured_fish",
+      "count": 1
+    },
+    "craftDurationMs": 2500
+  },
+  {
+    "id": "recipe_fiber_bandage",
+    "displayName": "Fiber Bandage",
+    "description": "Sterilized fiber mesh. Restores health.",
+    "station": "fabricator",
+    "fabricatorTier": "lifepod",
+    "category": "consumables",
+    "subsection": "consumables",
+    "ingredients": [
+      {
+        "itemId": "fiber_mesh",
+        "count": 1
+      }
+    ],
+    "output": {
+      "itemId": "fiber_bandage",
+      "count": 1
+    },
+    "craftDurationMs": 2000
+  }
+]

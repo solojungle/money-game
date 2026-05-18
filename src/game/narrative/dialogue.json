@@ -1,0 +1,37 @@
+{
+  "startId": "door",
+  "nodes": {
+    "door": {
+      "id": "door",
+      "text": "A neighbor cracks the door. \"Trick or treat?\"",
+      "next": "reply"
+    },
+    "reply": {
+      "id": "reply",
+      "text": "You grin. The neighbor drops a candy into your bag.",
+      "choices": [
+        {
+          "label": "Thank you!",
+          "nextId": "end_kind",
+          "setFlags": {
+            "metNeighbor": true
+          }
+        },
+        {
+          "label": "Stare silently",
+          "nextId": "end_weird"
+        }
+      ]
+    },
+    "end_kind": {
+      "id": "end_kind",
+      "text": "\"Happy Halloween!\" The door clicks shut.",
+      "next": null
+    },
+    "end_weird": {
+      "id": "end_weird",
+      "text": "...Okay then. The door closes a little faster.",
+      "next": null
+    }
+  }
+}

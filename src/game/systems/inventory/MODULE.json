@@ -1,0 +1,8 @@
+{
+  "id": "M02",
+  "domain": "SYSTEMS",
+  "ownedPaths": ["src/game/systems/inventory/**"],
+  "publicEntry": "src/game/systems/inventory/index.ts",
+  "dependsOn": ["CORE"],
+  "siblings": ["M01", "M04", "M15"]
+}

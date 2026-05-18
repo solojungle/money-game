@@ -1,0 +1,12 @@
+{
+  "id": "M15",
+  "domain": "PRESENTATION",
+  "ownedPaths": [
+    "src/game/presentation/hud/**",
+    "src/components/hud/BlueprintToast.tsx",
+    "src/components/hud/BlueprintToast.css"
+  ],
+  "publicEntry": "src/game/presentation/hud/index.ts",
+  "dependsOn": ["CORE", "M04"],
+  "siblings": ["M01", "M02", "M16"]
+}

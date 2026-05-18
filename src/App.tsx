@@ -1,25 +1,38 @@
-import { useCallback, useState } from "react";
-import { GameScene } from "./components/GameScene";
-import { TitleScreen } from "./components/TitleScreen";
+import { useGameAudio } from "./audio/useGameAudio";
+import { usePdaKeyboard } from "./controls/usePdaKeyboard";
+import { GameScene } from "./components/scene/GameScene";
+import { GameHUD } from "./components/hud/GameHUD";
+import { FabricatorShell } from "./components/hud/fabricator/FabricatorShell";
+import { InventoryScreen } from "./components/hud/InventoryScreen";
+import { StorageLockerShell } from "./components/hud/storage/StorageLockerShell";
+import { MainMenu } from "./components/main-menu/MainMenu";
+import { useGameStore } from "./store/gameStore";
 import "./App.css";
 
 function App() {
-  const [started, setStarted] = useState(false);
-  const handleStart = useCallback(() => setStarted(true), []);
+  const audio = useGameAudio();
+  usePdaKeyboard();
+  const started = useGameStore((s) => s.started);
+  const startGame = useGameStore((s) => s.startGame);
+  const inventoryOpen = useGameStore((s) => s.inventoryOpen);
+  const fabricatorOpen = useGameStore((s) => s.fabricatorOpen);
+  const storageOpen = useGameStore((s) => s.storageOpen);
+  const stationOpen = fabricatorOpen || storageOpen;
 
   return (
-    <div className="app">
-      <GameScene />
+    <div
+      className={`app${inventoryOpen ? " app--pda-open" : ""}${stationOpen ? " app--station-open" : ""}`}
+    >
+      <GameScene started={started} audio={audio} />
       {!started && (
         <div className="app__overlay">
-          <TitleScreen onStart={handleStart} />
+          <MainMenu onStart={startGame} />
         </div>
       )}
-      {started && (
-        <div className="app__hud" role="status">
-          <span>Scene active — build your game loop here.</span>
-        </div>
-      )}
+      <GameHUD />
+      <InventoryScreen />
+      <FabricatorShell />
+      <StorageLockerShell />
     </div>
   );
 }

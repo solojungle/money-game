@@ -1,0 +1,102 @@
+/* Shared overlay chrome for PDA-adjacent station menus (fabricator, storage). */
+
+.station-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.25rem 1.5rem 1rem;
+  background: var(--menu-scrim);
+  backdrop-filter: var(--menu-scrim-blur);
+  pointer-events: auto;
+}
+
+.station-shell__chrome {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: min(64rem, 100%);
+}
+
+.station-shell__frame {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.station-shell__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.station-shell__header {
+  flex-shrink: 0;
+  margin-bottom: 1.25rem;
+}
+
+.station-shell__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f8fafc;
+}
+
+.station-shell__subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+/* Footer — matches .pda-footer */
+.station-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 242, 255, 0.2);
+}
+
+.station-footer__action {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #f8fafc;
+}
+
+.station-footer__action--muted {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.station-footer__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+}
+
+.station-footer__key {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Dim world hotbar while station overlays are open */
+.app--station-open .game-hud__cluster--bc {
+  opacity: 0.25;
+  pointer-events: none;
+}

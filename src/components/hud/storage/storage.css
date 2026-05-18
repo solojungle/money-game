@@ -1,0 +1,17 @@
+/* Override .station-shell__content column layout so panels sit side by side */
+.storage-shell .station-shell__content {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  min-height: min(52vh, 36rem);
+  padding-top: 0.5rem;
+}
+
+.storage-shell .item-grid-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-width: 0;
+}

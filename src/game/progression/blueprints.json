@@ -1,0 +1,22 @@
+[
+  {
+    "id": "seaglide",
+    "displayName": "SEAGLIDE",
+    "fragmentsRequired": 2,
+    "depthBandMin": "starter",
+    "sharedUnlock": true
+  },
+  {
+    "id": "interior_wall",
+    "displayName": "INTERIOR WALL",
+    "fragmentsRequired": 1,
+    "sharedUnlock": true
+  },
+  {
+    "id": "standard_oxygen_tank",
+    "displayName": "STANDARD OXYGEN TANK",
+    "fragmentsRequired": 2,
+    "depthBandMin": "early",
+    "sharedUnlock": true
+  }
+]

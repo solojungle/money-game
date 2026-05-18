@@ -1,0 +1,8 @@
+{
+  "id": "M01",
+  "domain": "SYSTEMS",
+  "ownedPaths": ["src/game/systems/vitals/**"],
+  "publicEntry": "src/game/systems/vitals/index.ts",
+  "dependsOn": ["CORE"],
+  "siblings": ["M02", "M15"]
+}

@@ -1,0 +1,16 @@
+/* Shared translucency for in-game station menus (PDA, storage, fabricator). */
+:root {
+  --menu-scrim: rgba(3, 8, 12, 0.16);
+  --menu-scrim-blur: blur(2px);
+  --menu-panel: rgba(11, 26, 38, 0.52);
+  --menu-cell: rgba(15, 35, 50, 0.48);
+  --menu-surface: rgba(8, 26, 38, 0.5);
+  --menu-surface-alt: rgba(8, 20, 30, 0.42);
+  --menu-control: rgba(15, 35, 50, 0.5);
+  --menu-control-muted: rgba(30, 35, 45, 0.5);
+  --menu-row: rgba(15, 35, 50, 0.38);
+  --menu-detail: rgba(15, 35, 50, 0.42);
+  --menu-tooltip: rgba(8, 26, 32, 0.78);
+  --menu-chip: rgba(0, 0, 0, 0.22);
+  --menu-chip-border: rgba(11, 26, 38, 0.55);
+}

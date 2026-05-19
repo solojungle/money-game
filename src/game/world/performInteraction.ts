@@ -9,6 +9,8 @@ import {
   type ResolvedInteractionPrompt,
 } from "../presentation/hud/resolveInteractionPrompt";
 import { harvestableIdFor, type WorldInteractable } from "./interactables";
+import { requiresBaseInteriorAccess } from "./interiorStationAccess";
+import type { PlacedPiece } from "../building/types";
 import { spawnWorldDropsAt } from "../systems/worldDrops/spawnWorldDrop";
 import type { WorldDrop } from "./worldDrops";
 import { getResourceNodeDef, yieldForTier } from "./resourceNodes";
@@ -53,6 +55,10 @@ export function performInteraction(
   inventory: InventorySlot[],
   harvestedIds: readonly string[],
   worldDrops: readonly WorldDrop[] = [],
+  opts?: {
+    inBaseInterior?: boolean;
+    placedPieces?: readonly PlacedPiece[];
+  },
 ): {
   result: PerformInteractionResult;
   inventory?: InventorySlot[];
@@ -69,6 +75,14 @@ export function performInteraction(
     return { result: { ok: false, reason: "no_target" } };
   }
   if (!prompt?.actionable || !prompt.action) {
+    return { result: { ok: false, reason: "not_actionable" } };
+  }
+
+  const placed = opts?.placedPieces ?? [];
+  if (
+    requiresBaseInteriorAccess(activeInteractable, placed) &&
+    !opts?.inBaseInterior
+  ) {
     return { result: { ok: false, reason: "not_actionable" } };
   }
 

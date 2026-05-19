@@ -5,6 +5,9 @@ export const O2_DRAIN_100M = 2;
 export const O2_DRAIN_200M = 3;
 export const O2_DRAIN_REBREATHER = 1;
 
+/** Habitat interior refill — faster than shallow drain, not instant. */
+export const O2_REFILL_PER_SECOND = 40;
+
 export function getO2DrainPerSecond(
   depthM: number,
   hasRebreather: boolean,

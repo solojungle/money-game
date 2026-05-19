@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { formatO2Percent, o2ArcDegrees } from "../../game/presentation/hud";
+import { formatO2Percent } from "../../game/presentation/hud";
 import healthIcon from "../../assets/hud/vitals/health.svg";
 import hungerIcon from "../../assets/hud/vitals/hunger.svg";
 import waterIcon from "../../assets/hud/vitals/water.svg";
@@ -18,6 +18,27 @@ type VitalsClusterProps = {
 const MINI_R = 14;
 const MINI_CIRC = 2 * Math.PI * MINI_R;
 const O2_BUBBLE_COUNT = 5;
+
+const O2_RING_CX = 40;
+const O2_RING_CY = 40;
+const O2_RING_R = 34;
+const O2_RING_CIRC = 2 * Math.PI * O2_RING_R;
+/** Full ring from 12 o'clock (sweep 1). */
+const O2_RING_PATH = `M ${O2_RING_CX} ${O2_RING_CY - O2_RING_R} A ${O2_RING_R} ${O2_RING_R} 0 1 1 ${O2_RING_CX - 0.01} ${O2_RING_CY - O2_RING_R}`;
+/** Mirror so dashoffset gap opens clockwise (upper right first). */
+const O2_RING_FLIP = `translate(${O2_RING_CX} ${O2_RING_CY}) scale(-1 1) translate(${-O2_RING_CX} ${-O2_RING_CY})`;
+
+/** Gap opens clockwise from 12 o'clock as O₂ drops. */
+function o2RingStroke(o2Percent: number): {
+  strokeDasharray: string;
+  strokeDashoffset: number;
+} {
+  const pct = Math.max(0, Math.min(100, o2Percent));
+  return {
+    strokeDasharray: `${O2_RING_CIRC}`,
+    strokeDashoffset: O2_RING_CIRC * (1 - pct / 100),
+  };
+}
 
 /** Equal 35° steps on left arc (10 / 9 / 8 o'clock). */
 const ORBIT_ANGLES = {
@@ -38,8 +59,6 @@ function MiniOrb({
   iconSrc: string;
 }) {
   const pct = Math.max(0, Math.min(100, value));
-  const dash = (pct / 100) * MINI_CIRC;
-
   return (
     <div
       className="vitals-cluster__mini"
@@ -60,15 +79,18 @@ function MiniOrb({
           r={MINI_R}
           fill="none"
         />
-        <circle
-          className="vitals-cluster__mini-fill"
-          cx="18"
-          cy="18"
-          r={MINI_R}
-          fill="none"
-          strokeDasharray={`${dash} ${MINI_CIRC}`}
-          transform="rotate(-90 18 18)"
-        />
+        <g transform="translate(18 18) scale(-1 1) translate(-18 -18)">
+          <circle
+            className="vitals-cluster__mini-fill"
+            cx="18"
+            cy="18"
+            r={MINI_R}
+            fill="none"
+            strokeDasharray={`${MINI_CIRC}`}
+            strokeDashoffset={MINI_CIRC * (1 - pct / 100)}
+            transform="rotate(-90 18 18)"
+          />
+        </g>
       </svg>
       <span className="vitals-cluster__mini-icon">
         <img src={iconSrc} alt="" className="vitals-cluster__mini-icon-img" />
@@ -99,7 +121,7 @@ export function VitalsCluster({
   nearDeath = false,
   numericMode = false,
 }: VitalsClusterProps) {
-  const arc = o2ArcDegrees(o2Percent);
+  const o2Stroke = o2RingStroke(o2Percent);
   const o2Text = formatO2Percent(o2Percent);
   const prevO2 = useRef(o2Percent);
   const [refilling, setRefilling] = useState(false);
@@ -131,20 +153,20 @@ export function VitalsCluster({
         >
           <circle
             className="vitals-cluster__o2-track"
-            cx="40"
-            cy="40"
-            r="34"
+            cx={O2_RING_CX}
+            cy={O2_RING_CY}
+            r={O2_RING_R}
             fill="none"
           />
-          <circle
-            className="vitals-cluster__o2-fill"
-            cx="40"
-            cy="40"
-            r="34"
-            fill="none"
-            strokeDasharray={`${(arc / 360) * 213.6} 213.6`}
-            transform="rotate(-135 40 40)"
-          />
+          <g transform={O2_RING_FLIP}>
+            <path
+              className="vitals-cluster__o2-fill"
+              d={O2_RING_PATH}
+              fill="none"
+              strokeDasharray={o2Stroke.strokeDasharray}
+              strokeDashoffset={o2Stroke.strokeDashoffset}
+            />
+          </g>
         </svg>
         {refilling ? <O2Bubbles /> : null}
         <div className="vitals-cluster__o2-center">

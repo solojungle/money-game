@@ -42,6 +42,7 @@ export function InteractionFocus({ playerRef }: InteractionFocusProps) {
       hits.map((h) => ({ object: h.object, point: h.point })),
       playerPos,
       store.worldDrops,
+      store.placedPieces,
     );
 
     const key = focused ? focusKey(focused) : null;

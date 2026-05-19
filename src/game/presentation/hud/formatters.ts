@@ -12,7 +12,7 @@ export function formatHeadingDeg(deg: number): string {
 }
 
 export function o2ArcDegrees(o2Percent: number): number {
-  return Math.round((Math.max(0, Math.min(100, o2Percent)) / 100) * 270);
+  return Math.round((Math.max(0, Math.min(100, o2Percent)) / 100) * 360);
 }
 
 export function compassCardinal(headingDeg: number): string {

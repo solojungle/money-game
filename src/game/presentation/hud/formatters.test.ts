@@ -16,7 +16,7 @@ describe("M15 formatters", () => {
   });
 
   it("maps O₂ to arc sweep", () => {
-    expect(o2ArcDegrees(100)).toBe(270);
+    expect(o2ArcDegrees(100)).toBe(360);
     expect(o2ArcDegrees(0)).toBe(0);
   });
 

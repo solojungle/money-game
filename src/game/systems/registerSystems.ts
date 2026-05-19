@@ -8,6 +8,7 @@ export type SystemsStoreSlice = {
   hasRebreather: boolean;
   gameMode: GameMode;
   inBaseInterior: boolean;
+  aboveWaterSurface: boolean;
 };
 
 let vitalsUnsub: (() => void) | null = null;

@@ -1,16 +1,15 @@
 import { RoundedBox } from "@react-three/drei";
 import { useMemo } from "react";
-import { DoubleSide, ShapeGeometry } from "three";
+import { DoubleSide, PlaneGeometry, ShapeGeometry } from "three";
 import { ROOM_WALL_THICK } from "../../../game/building/buildingConstants";
 import type { RoomFace } from "../../../game/building/roomGeometry";
+import { CausticsProjectedLayer } from "../effects/CausticsProjectedLayer";
 import { BUILDING_HULL, BUILDING_WHITE } from "./buildingMaterials";
-import {
-  roundedRectShape,
-  roundedRectWithHole,
-} from "./roundedRectShape";
+import { roundedRectShape, roundedRectWithHole } from "./roundedRectShape";
 
 /** Softens outer corners on room slabs and wall panels (meters). */
 const CORNER_RADIUS = 0.18;
+const CAUSTIC_INSET = 0.03;
 
 type RoomShellMeshProps = {
   width: number;
@@ -80,12 +79,36 @@ function wallSpecs(width: number, height: number, depth: number): WallSpec[] {
   ];
 }
 
+function causticWallPosition(
+  spec: WallSpec,
+  hx: number,
+  hz: number,
+  t: number,
+) {
+  switch (spec.face) {
+    case "+z":
+      return [0, 0, hz - t / 2 - CAUSTIC_INSET] as [number, number, number];
+    case "-z":
+      return [0, 0, -hz + t / 2 + CAUSTIC_INSET] as [number, number, number];
+    case "+x":
+      return [hx - t / 2 - CAUSTIC_INSET, 0, 0] as [number, number, number];
+    case "-x":
+      return [-hx + t / 2 + CAUSTIC_INSET, 0, 0] as [number, number, number];
+  }
+}
+
 function WallPanel({
   spec,
   holeRadius,
+  hx,
+  hz,
+  t,
 }: {
   spec: WallSpec;
   holeRadius?: number;
+  hx: number;
+  hz: number;
+  t: number;
 }) {
   const geom = useMemo(() => {
     if (holeRadius != null && holeRadius > 0) {
@@ -94,20 +117,30 @@ function WallPanel({
     return solidWallGeometry(spec.wallW, spec.wallH);
   }, [spec.wallH, spec.wallW, holeRadius]);
 
+  const causticPos = causticWallPosition(spec, hx, hz, t);
+
   return (
-    <mesh
-      position={spec.position}
-      rotation={spec.rotation}
-      geometry={geom}
-      castShadow
-      receiveShadow
-    >
-      <meshStandardMaterial
-        color={BUILDING_WHITE}
-        {...BUILDING_HULL}
-        side={DoubleSide}
+    <group>
+      <mesh
+        position={spec.position}
+        rotation={spec.rotation}
+        geometry={geom}
+        castShadow
+        receiveShadow
+      >
+        <meshStandardMaterial
+          color={BUILDING_WHITE}
+          {...BUILDING_HULL}
+          side={DoubleSide}
+        />
+      </mesh>
+      <CausticsProjectedLayer
+        geometry={geom}
+        position={causticPos}
+        rotation={spec.rotation}
+        renderOrder={3}
       />
-    </mesh>
+    </group>
   );
 }
 
@@ -120,6 +153,8 @@ export function RoomShellMesh({
 }: RoomShellMeshProps) {
   const t = ROOM_WALL_THICK;
   const hy = height / 2;
+  const hx = width / 2;
+  const hz = depth / 2;
   const hullMat = (
     <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
   );
@@ -136,6 +171,18 @@ export function RoomShellMesh({
     () => wallSpecs(width, height, depth),
     [width, height, depth],
   );
+
+  const floorGeom = useMemo(
+    () => new PlaneGeometry(width, depth),
+    [width, depth],
+  );
+  const ceilingGeom = useMemo(
+    () => new PlaneGeometry(width, depth),
+    [width, depth],
+  );
+
+  const floorY = -hy + t + CAUSTIC_INSET;
+  const ceilingY = hy - t - CAUSTIC_INSET;
 
   return (
     <group>
@@ -159,11 +206,26 @@ export function RoomShellMesh({
       >
         {hullMat}
       </RoundedBox>
+      <CausticsProjectedLayer
+        geometry={floorGeom}
+        position={[0, floorY, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        renderOrder={3}
+      />
+      <CausticsProjectedLayer
+        geometry={ceilingGeom}
+        position={[0, ceilingY, 0]}
+        rotation={[Math.PI / 2, 0, 0]}
+        renderOrder={3}
+      />
       {walls.map((spec) => (
         <WallPanel
           key={spec.face}
           spec={spec}
           holeRadius={holeByFace.get(spec.face)}
+          hx={hx}
+          hz={hz}
+          t={t}
         />
       ))}
     </group>

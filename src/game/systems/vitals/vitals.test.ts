@@ -11,6 +11,7 @@ describe("vitals tick", () => {
         hasRebreather: false,
         gameMode: "play",
         inBaseInterior: false,
+        aboveWaterSurface: false,
       }),
       (next) => {
         if (next.o2Percent !== undefined) o2 = next.o2Percent;
@@ -20,7 +21,7 @@ describe("vitals tick", () => {
     expect(o2).toBeLessThan(100);
   });
 
-  it("refills O₂ to 100 inside base interior", () => {
+  it("refills O₂ gradually inside base interior", () => {
     let o2 = 40;
     const tick = createVitalsTick(
       () => ({
@@ -29,12 +30,37 @@ describe("vitals tick", () => {
         hasRebreather: false,
         gameMode: "play",
         inBaseInterior: true,
+        aboveWaterSurface: false,
       }),
       (next) => {
         if (next.o2Percent !== undefined) o2 = next.o2Percent;
       },
     );
     tick(16);
+    expect(o2).toBeGreaterThan(40);
+    expect(o2).toBeLessThan(100);
+    tick(2000);
+    expect(o2).toBe(100);
+  });
+
+  it("refills O₂ gradually above the water surface", () => {
+    let o2 = 35;
+    const tick = createVitalsTick(
+      () => ({
+        o2Percent: o2,
+        depthM: 0,
+        hasRebreather: false,
+        gameMode: "play",
+        inBaseInterior: false,
+        aboveWaterSurface: true,
+      }),
+      (next) => {
+        if (next.o2Percent !== undefined) o2 = next.o2Percent;
+      },
+    );
+    tick(500);
+    expect(o2).toBeGreaterThan(35);
+    tick(2000);
     expect(o2).toBe(100);
   });
 });

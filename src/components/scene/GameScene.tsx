@@ -1,8 +1,10 @@
 import { Canvas } from "@react-three/fiber";
+import { Color } from "three";
 import {
   Environment,
   KeyboardControls,
   OrbitControls,
+  useTexture,
 } from "@react-three/drei";
 import { Physics, type RapierRigidBody } from "@react-three/rapier";
 import { Suspense, useRef } from "react";
@@ -15,18 +17,30 @@ import { GameClock } from "./GameClock";
 import { InteractionFocus } from "./InteractionFocus";
 import { Level } from "./Level";
 import { Player } from "./Player";
+import { CAUSTICS } from "./effects/causticsConfig";
+import { CausticsScreenPass } from "./effects/CausticsScreenPass";
+import { CAUSTICS_TEXTURE_URL } from "./effects/causticsTexture";
+import { WATER_NORMAL_URL } from "./effects/waterSurfaceTextures";
+
+useTexture.preload(CAUSTICS_TEXTURE_URL);
+useTexture.preload(WATER_NORMAL_URL);
+import { OceanSky } from "./effects/OceanSky";
+import { SunLighting } from "./effects/SunLighting";
+import { UnderwaterAtmosphere } from "./effects/UnderwaterAtmosphere";
+import { UNDERWATER_FOG } from "./effects/underwaterAtmosphereConfig";
+import { UnderwaterParticles } from "./effects/UnderwaterParticles";
+import { WaterSurface } from "./effects/WaterSurface";
 import { ZoneOverlapProvider } from "./ZoneOverlapProvider";
 
 function WorldLighting() {
   return (
     <>
-      <ambientLight intensity={0.22} />
-      <directionalLight
-        castShadow
-        position={[6, 12, 4]}
-        intensity={0.85}
-        shadow-mapSize={[1024, 1024]}
+      <ambientLight intensity={0.18} />
+      <hemisphereLight
+        args={["#a0ecff", "#c8a050", 0.32]}
+        position={[0, 20, 0]}
       />
+      <SunLighting />
     </>
   );
 }
@@ -42,14 +56,16 @@ function SceneContent({
   audio,
 }: SceneContentProps & { paused: boolean }) {
   const playerRef = useRef<RapierRigidBody>(null);
-  const fogColor = "#5bc3ac";
 
   return (
     <>
-      <color attach="background" args={[fogColor]} />
-      <fog attach="fog" args={[fogColor, 4, 42]} />
+      <OceanSky />
+      <UnderwaterAtmosphere playerRef={playerRef} />
+      <UnderwaterParticles playerRef={playerRef} />
+      {CAUSTICS.enableScreenPass ? <CausticsScreenPass /> : null}
       <WorldLighting />
-      <Environment preset="night" environmentIntensity={0.4} />
+      <Environment preset="dawn" environmentIntensity={0.22} frames={1} />
+      <WaterSurface />
       <Physics gravity={[0, -1.2, 0]} paused={!started}>
         <ZoneOverlapProvider>
           <Level />
@@ -87,6 +103,9 @@ export function GameScene({ started, paused, audio }: GameSceneProps) {
         shadows="percentage"
         camera={{ position: [7, 5, 7], fov: 72 }}
         dpr={[1, 2]}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new Color(UNDERWATER_FOG.shallowColor));
+        }}
       >
         <KeyboardControls map={CONTROL_MAP}>
           <FpsTracker />

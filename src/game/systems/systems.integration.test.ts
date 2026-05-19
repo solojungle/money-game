@@ -19,6 +19,7 @@ describe("game systems integration", () => {
         hasRebreather: false,
         gameMode: "play",
         inBaseInterior: false,
+        aboveWaterSurface: false,
       }),
       (partial) => {
         if (partial.o2Percent !== undefined) o2 = partial.o2Percent;

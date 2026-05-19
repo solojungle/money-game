@@ -10,6 +10,7 @@ import { BuildingColliders } from "./building/BuildingColliders";
 import { HatchMesh } from "./building/HatchMesh";
 import { BUILDING_HULL, BUILDING_WHITE } from "./building/buildingMaterials";
 import { RoomShellMesh } from "./building/RoomShellMesh";
+import { CausticsExteriorShell } from "./effects/CausticsExteriorShell";
 
 const LOCKER_ACCENT = "#f57c00";
 
@@ -62,6 +63,7 @@ function PieceMesh({
   if (isLocker) {
     return (
       <group position={piece.position} rotation={[0, piece.rotationY, 0]}>
+        <CausticsExteriorShell width={w} height={h} depth={d} />
         <mesh castShadow>
           <boxGeometry args={[w, h, d]} />
           <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
@@ -102,40 +104,40 @@ function PieceMesh({
 
   if (isSolar) {
     return (
-      <mesh
-        castShadow
-        position={piece.position}
-        rotation={[0, piece.rotationY, 0]}
-      >
-        <boxGeometry args={[w, h, d]} />
-        <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
-      </mesh>
+      <group position={piece.position} rotation={[0, piece.rotationY, 0]}>
+        <CausticsExteriorShell width={w} height={h} depth={d} />
+        <mesh castShadow>
+          <boxGeometry args={[w, h, d]} />
+          <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
+        </mesh>
+      </group>
     );
   }
 
   if (piece.pieceId === "piece_fabricator") {
     return (
-      <mesh
-        castShadow
+      <group
         position={piece.position}
         rotation={[0, piece.rotationY, 0]}
         userData={{ [INTERACT_ZONE_ID_KEY]: "fabricator" }}
       >
-        <boxGeometry args={[w, h, d]} />
-        <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
-      </mesh>
+        <CausticsExteriorShell width={w} height={h} depth={d} />
+        <mesh castShadow>
+          <boxGeometry args={[w, h, d]} />
+          <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
+        </mesh>
+      </group>
     );
   }
 
   return (
-    <mesh
-      castShadow
-      position={piece.position}
-      rotation={[0, piece.rotationY, 0]}
-    >
-      <boxGeometry args={[w, h, d]} />
-      <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
-    </mesh>
+    <group position={piece.position} rotation={[0, piece.rotationY, 0]}>
+      <CausticsExteriorShell width={w} height={h} depth={d} />
+      <mesh castShadow>
+        <boxGeometry args={[w, h, d]} />
+        <meshStandardMaterial color={BUILDING_WHITE} {...BUILDING_HULL} />
+      </mesh>
+    </group>
   );
 }
 

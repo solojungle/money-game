@@ -8,18 +8,22 @@ import { PlacedPiecesLayer } from "./PlacedPiecesLayer";
 import { PlacementGhost } from "./PlacementGhost";
 import { ResourceNode } from "./ResourceNode";
 import { ScanTargetZone } from "./ScanTargetZone";
+import { SEAFLOOR_BODY_Y } from "../../game/world/waterLevel";
+import { CausticsProvider } from "./effects/CausticsProvider";
+import { SeafloorMesh } from "./SeafloorMesh";
 import { WorldDropsLayer } from "./WorldDropsLayer";
 
 /** Play mode — starter base from placedPieces; resources/fauna on seafloor. */
 export function PlayLevel() {
   return (
-    <>
-      <RigidBody type="fixed" colliders={false} position={[0, -0.5, 0]}>
+    <CausticsProvider>
+      <RigidBody
+        type="fixed"
+        colliders={false}
+        position={[0, SEAFLOOR_BODY_Y, 0]}
+      >
         <CuboidCollider args={[18, 0.2, 18]} />
-        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[36, 36]} />
-          <meshStandardMaterial color="#d0bd7a" roughness={0.95} />
-        </mesh>
+        <SeafloorMesh />
       </RigidBody>
 
       <PlacedPiecesLayer />
@@ -60,6 +64,6 @@ export function PlayLevel() {
       ))}
 
       <WorldDropsLayer />
-    </>
+    </CausticsProvider>
   );
 }

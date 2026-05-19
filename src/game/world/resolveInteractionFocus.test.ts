@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { createStarterPlacedPieces } from "../building";
 import "./resourceNodes";
 import "./faunaSpawns";
 import "./scanTargets";
@@ -107,6 +108,37 @@ describe("resolveInteractionFocus", () => {
       player,
     );
     expect(focused).toMatchObject({ nodeId: "ti_small_01" });
+  });
+
+  it("ignores fabricator when player is outside the base", () => {
+    const focused = resolveInteractionFocus(
+      [
+        {
+          object: mockObject("fabricator"),
+          point: { x: 0, y: 0, z: 1 },
+        },
+      ],
+      { x: 0, y: 4, z: 0 },
+      [],
+      createStarterPlacedPieces(),
+    );
+    expect(focused).toBeNull();
+  });
+
+  it("allows fabricator when player is inside the base", () => {
+    const player = { x: -3, y: 1.2, z: -4 };
+    const focused = resolveInteractionFocus(
+      [
+        {
+          object: mockObject("fabricator"),
+          point: { x: -1.5, y: 0.55, z: -4 },
+        },
+      ],
+      player,
+      [],
+      createStarterPlacedPieces(),
+    );
+    expect(focused).toMatchObject({ kind: "fabricator" });
   });
 });
 

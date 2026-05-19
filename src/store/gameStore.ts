@@ -86,6 +86,8 @@ import {
   pieceCreatesContainer,
   refundPieceIngredients,
 } from "../game/building";
+import { getSwimProfile } from "../game/character/profile";
+import { isBelowWaterSurface } from "../game/world/waterLevel";
 import type { ContainerDefId } from "../game/systems/storage/containerDefs";
 import {
   containerDefForPlaced,
@@ -303,14 +305,19 @@ function bindSystems(set: (fn: (s: GameState) => Partial<GameState>) => void) {
     () => {
       const s = useGameStore.getState();
       const pos = s.playerWorldPos;
+      const inBaseInterior =
+        pos != null &&
+        isInsideBaseInterior([pos.x, pos.y, pos.z], s.placedPieces);
+      const feetY =
+        pos != null ? pos.y - getSwimProfile().capsuleHalfHeight : null;
       return {
         o2Percent: s.o2Percent,
         depthM: s.depthM,
         hasRebreather: s.hasRebreather,
         gameMode: s.gameMode,
-        inBaseInterior:
-          pos != null &&
-          isInsideBaseInterior([pos.x, pos.y, pos.z], s.placedPieces),
+        inBaseInterior,
+        aboveWaterSurface:
+          feetY != null && !inBaseInterior && !isBelowWaterSurface(feetY),
       };
     },
     (partial) => set(() => partial),
@@ -682,6 +689,11 @@ export const useGameStore = create<GameState>((set, get) => ({
         ? pickupFloatTextFor(target)
         : null;
 
+    const pos = s.playerWorldPos;
+    const inBaseInterior =
+      pos != null &&
+      isInsideBaseInterior([pos.x, pos.y, pos.z], s.placedPieces);
+
     const outcome = performInteraction(
       target,
       s.hotbarSlots,
@@ -689,6 +701,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       s.inventory,
       s.harvestedIds,
       s.worldDrops,
+      { inBaseInterior, placedPieces: s.placedPieces },
     );
     if (!outcome.result.ok) return;
 

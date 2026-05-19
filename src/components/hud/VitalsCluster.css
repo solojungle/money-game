@@ -85,6 +85,7 @@
 .vitals-cluster__o2-track {
   stroke: rgba(0, 212, 255, 0.12);
   stroke-width: 10;
+  stroke-linecap: round;
 }
 
 .vitals-cluster__o2-fill {

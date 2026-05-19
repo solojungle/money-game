@@ -8,6 +8,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { forwardRef, useCallback, useRef } from "react";
 import * as THREE from "three";
 import {
+  bodyYOnInteriorFloor,
   interiorFloorY,
   isInsideBaseInterior,
 } from "../../game/building/interiorVolume";
@@ -25,6 +26,7 @@ import { movementAllowed } from "../../game/state/movement";
 import { useGameStore } from "../../store/gameStore";
 import { depthFromPlayerY } from "../../game/presentation/hud";
 import { resolveCurrentPrompt } from "../../game/world/performInteraction";
+import { resolveLocomotionMode } from "../../game/world/waterLevel";
 import type { AudioService } from "../../audio/audioService";
 
 type PlayerProps = {
@@ -61,7 +63,8 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
   const [, getKeys] = useKeyboardControls();
   const prevInteract = useRef(false);
   const prevAscend = useRef(false);
-  const wasInterior = useRef(false);
+  const wasDryLocomotion = useRef(false);
+  const wasInInterior = useRef(false);
   const flashlightOn = useGameStore((s) => s.flashlightOn);
 
   useFrame(() => {
@@ -100,10 +103,26 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
     const profile = getSwimProfile();
     const canMove = movementAllowed(store);
 
-    const pos = b.translation();
-    const worldPos: [number, number, number] = [pos.x, pos.y, pos.z];
-    store.setPlayerWorldPos({ x: pos.x, y: pos.y, z: pos.z });
-    const depth = depthFromPlayerY(pos.y);
+    const t = b.translation();
+    let px = t.x;
+    let py = t.y;
+    let pz = t.z;
+
+    const inInterior = isInsideBaseInterior([px, py, pz], store.placedPieces);
+    if (inInterior && !wasInInterior.current) {
+      const floorY = interiorFloorY([px, py, pz], store.placedPieces);
+      if (floorY != null) {
+        py = bodyYOnInteriorFloor(floorY, profile.capsuleHalfHeight);
+        b.setTranslation({ x: px, y: py, z: pz }, true);
+        const lv = b.linvel();
+        b.setLinvel({ x: lv.x, y: 0, z: lv.z }, true);
+      }
+    }
+    wasInInterior.current = inInterior;
+
+    const worldPos: [number, number, number] = [px, py, pz];
+    store.setPlayerWorldPos({ x: px, y: py, z: pz });
+    const depth = depthFromPlayerY(py);
     if (depth !== store.depthM) store.setPlayerDepth(depth);
 
     const headingDeg = (Math.atan2(_camFwd.x, _camFwd.z) * 180) / Math.PI;
@@ -111,26 +130,29 @@ export const Player = forwardRef<RapierRigidBody, PlayerProps>(function Player(
       store.setHeadingDeg(headingDeg);
     }
 
-    const inInterior = isInsideBaseInterior(worldPos, store.placedPieces);
-    if (inInterior !== wasInterior.current) {
+    const feetY = py - profile.capsuleHalfHeight;
+    const dryLocomotion =
+      resolveLocomotionMode(feetY, inInterior, intent.descend) === "dry";
+    if (dryLocomotion !== wasDryLocomotion.current) {
       b.setGravityScale(
-        inInterior ? INTERIOR_GRAVITY_SCALE : SWIM_GRAVITY_SCALE,
+        dryLocomotion ? INTERIOR_GRAVITY_SCALE : SWIM_GRAVITY_SCALE,
         true,
       );
-      b.setLinearDamping(inInterior ? INTERIOR_DAMPING : SWIM_DAMPING);
-      wasInterior.current = inInterior;
+      b.setLinearDamping(dryLocomotion ? INTERIOR_DAMPING : SWIM_DAMPING);
+      wasDryLocomotion.current = dryLocomotion;
     }
 
     if (canMove) {
-      if (inInterior) {
+      if (dryLocomotion) {
         const lv = b.linvel();
         const horiz = walkHorizontalVelocity(
           intent,
           { x: _camFwd.x, z: _camFwd.z },
           { x: _camRight.x, z: _camRight.z },
         );
-        const floorY = interiorFloorY(worldPos, store.placedPieces);
-        const feetY = pos.y - profile.capsuleHalfHeight;
+        const floorY = inInterior
+          ? interiorFloorY(worldPos, store.placedPieces)
+          : null;
         const grounded =
           floorY != null &&
           isGroundedOnInteriorFloor({

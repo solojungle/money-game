@@ -46,3 +46,11 @@ export function interiorFloorY(
   }
   return null;
 }
+
+/** Rigid-body center Y so capsule feet rest on the interior floor. */
+export function bodyYOnInteriorFloor(
+  floorY: number,
+  capsuleHalfHeight: number,
+): number {
+  return floorY + capsuleHalfHeight;
+}

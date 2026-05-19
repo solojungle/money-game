@@ -4,11 +4,13 @@ import {
   PICKUP_RANGE_M,
   STATION_RANGE_M,
 } from "./interactRange";
+import type { PlacedPiece } from "../building/types";
 import type { WorldDrop } from "./worldDrops";
 import {
   interactableFromZoneId,
   type WorldInteractable,
 } from "./interactables";
+import { canAccessInteriorStation } from "./interiorStationAccess";
 
 export const INTERACT_ZONE_ID_KEY = "interactZoneId";
 
@@ -60,7 +62,13 @@ export function resolveInteractionFocus(
   hits: readonly InteractionRayHit[],
   playerPosition: { x: number; y: number; z: number },
   worldDrops: readonly WorldDrop[] = [],
+  placedPieces: readonly PlacedPiece[] = [],
 ): WorldInteractable | null {
+  const playerPos: [number, number, number] = [
+    playerPosition.x,
+    playerPosition.y,
+    playerPosition.z,
+  ];
   let best: WorldInteractable | null = null;
   let bestDistSq = Infinity;
 
@@ -70,6 +78,7 @@ export function resolveInteractionFocus(
 
     const target = interactableFromZoneId(zoneId, worldDrops);
     if (!target) continue;
+    if (!canAccessInteriorStation(playerPos, placedPieces, target)) continue;
 
     const maxM = maxInteractDistanceFor(target);
     const maxSq = maxM * maxM;

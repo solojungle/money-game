@@ -126,17 +126,28 @@ describe("resolveInteractionFocus", () => {
   });
 
   it("allows fabricator when player is inside the base", () => {
-    const player = { x: -3, y: 1.2, z: -4 };
+    const placed = createStarterPlacedPieces();
+    const hub = placed.find((p) => p.pieceId === "piece_room")!;
+    const fab = placed.find((p) => p.pieceId === "piece_fabricator")!;
+    const player = {
+      x: hub.position[0],
+      y: hub.position[1],
+      z: hub.position[2],
+    };
     const focused = resolveInteractionFocus(
       [
         {
           object: mockObject("fabricator"),
-          point: { x: -1.5, y: 0.55, z: -4 },
+          point: {
+            x: fab.position[0],
+            y: fab.position[1],
+            z: fab.position[2],
+          },
         },
       ],
       player,
       [],
-      createStarterPlacedPieces(),
+      placed,
     );
     expect(focused).toMatchObject({ kind: "fabricator" });
   });

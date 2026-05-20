@@ -57,7 +57,7 @@ export function hatchesOnRoomFaces(
   return open;
 }
 
-/** Hatch portal openings for a room (one per face; uses largest radius if multiple). */
+/** Hatch portal openings for a structural module (one per face). */
 export function hatchOpeningsForRoom(
   room: PlacedPiece,
   placed: readonly PlacedPiece[],

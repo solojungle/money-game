@@ -1,10 +1,15 @@
 import { ROOM_WALL_THICK } from "./buildingConstants";
 import { getPiece } from "./index";
+import { nearestStructuralModule } from "./structuralSockets";
 import type { PlacedPiece } from "./types";
 
 const WALL_CENTER_INSET = ROOM_WALL_THICK / 2;
 
-export const ROOM_PIECE_IDS = ["piece_room", "piece_half_round_room"] as const;
+export const ROOM_PIECE_IDS = [
+  "piece_room",
+  "piece_half_round_room",
+  "piece_corridor",
+] as const;
 
 export type RoomFace = "+x" | "-x" | "+z" | "-z";
 
@@ -85,36 +90,11 @@ export function snapToRoomFace(
   }
 }
 
-function distToRoomSurface(
-  point: [number, number, number],
-  center: [number, number, number],
-  half: [number, number, number],
-): number {
-  const dx = Math.max(Math.abs(point[0] - center[0]) - half[0], 0);
-  const dy = Math.max(Math.abs(point[1] - center[1]) - half[1], 0);
-  const dz = Math.max(Math.abs(point[2] - center[2]) - half[2], 0);
-  return Math.hypot(dx, dy, dz);
-}
-
 export function nearestStructuralRoom(
   hit: [number, number, number],
   placed: PlacedPiece[],
 ): { piece: PlacedPiece; half: [number, number, number] } | null {
-  let best: { piece: PlacedPiece; half: [number, number, number] } | null =
-    null;
-  let bestDist = Infinity;
-  for (const p of placed) {
-    if (!ROOM_PIECE_IDS.includes(p.pieceId as (typeof ROOM_PIECE_IDS)[number]))
-      continue;
-    const half = roomHalfExtents(p.pieceId);
-    const dist = distToRoomSurface(hit, p.position, half);
-    if (dist < bestDist) {
-      bestDist = dist;
-      best = { piece: p, half };
-    }
-  }
-  if (!best || bestDist > 2.5) return null;
-  return best;
+  return nearestStructuralModule(hit, placed);
 }
 
 function snapCoord(v: number, enabled: boolean): number {

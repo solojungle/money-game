@@ -19,10 +19,10 @@ export const WATER_SURFACE = {
   underside: {
     snellColor: "#d0f8ff",
     tirColor: "#085868",
-    sunDiskStrength: 0.65,
-    /** Snell core — keep low so fog shows through; brightness comes from snell^2 in shader. */
-    snellOpacity: 0.38,
+    sunDiskStrength: 0.72,
+    /** Snell core — procedural caustics add fill; brightness comes from snell^2 in shader. */
+    snellOpacity: 0.44,
     /** Grazing rim — nearly invisible so the disk has soft edges. */
-    rimOpacity: 0.12,
+    rimOpacity: 0.14,
   },
 } as const;

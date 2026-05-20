@@ -38,6 +38,8 @@ export type BuilderPieceRecipe = {
   containerDefId?: "wall_locker" | "floor_locker";
   ghostSize?: [number, number, number];
   powerDraw?: number;
+  /** Subnautica 2 wiki reference (not shown in UI yet). */
+  wikiUrl?: string;
 };
 
 export type PlacedPiece = {

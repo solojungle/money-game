@@ -17,6 +17,9 @@ import {
   createWaterHorizonUniforms,
   type WaterHorizonUniforms,
 } from "./waterHorizonPatch";
+import { CAUSTICS } from "./causticsConfig";
+import { causticTextureUniform } from "./causticTextureUniform";
+import { useProceduralCausticsTexture } from "./ProceduralCausticsContext";
 import { UNDERWATER_FOG } from "./underwaterAtmosphereConfig";
 import { WATER_SURFACE } from "./waterSurfaceConfig";
 import { WATER_NORMAL_URL } from "./waterSurfaceTextures";
@@ -44,6 +47,7 @@ export function WaterSurface() {
   const horizonUniformsRef = useRef<WaterHorizonUniforms | null>(null);
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
+  const proceduralCaustic = useProceduralCausticsTexture();
 
   const normalSource = useTexture(WATER_NORMAL_URL);
   const waterNormals = useMemo(
@@ -112,6 +116,9 @@ export function WaterSurface() {
         uUnderSnellOpacity: { value: underside.snellOpacity },
         uUnderRimOpacity: { value: underside.rimOpacity },
         uWaterSurfaceY: { value: WATER_SURFACE.worldY },
+        tCaustic: { value: null as Texture | null },
+        uCausticWorldScale: { value: CAUSTICS.undersideCausticScale },
+        uCausticStrength: { value: CAUSTICS.undersideCausticStrength },
       },
       vertexShader: WATER_UNDERSIDE_VERTEX,
       fragmentShader: WATER_UNDERSIDE_FRAGMENT,
@@ -157,6 +164,8 @@ export function WaterSurface() {
     if (underMat) {
       underMat.uniforms.uTime.value += delta;
       underMat.uniforms.uSunDir.value.copy(skySunDirection);
+      const causticTex = proceduralCaustic ?? causticTextureUniform.value;
+      if (causticTex) underMat.uniforms.tCaustic.value = causticTex;
     }
   });
 

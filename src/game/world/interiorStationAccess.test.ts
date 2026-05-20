@@ -21,9 +21,11 @@ describe("requiresBaseInteriorAccess", () => {
     expect(requiresBaseInteriorAccess({ kind: "fabricator" }, starter)).toBe(
       true,
     );
+    const wallLocker = starter.find((p) => p.pieceId === "piece_wall_locker");
+    expect(wallLocker).toBeDefined();
     expect(
       requiresBaseInteriorAccess(
-        { kind: "storage_locker", containerId: "placed_wall_locker_a" },
+        { kind: "storage_locker", containerId: wallLocker!.id },
         starter,
       ),
     ).toBe(true);

@@ -3,12 +3,14 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import { AdditiveBlending, DoubleSide, ShaderMaterial, Vector2 } from "three";
 import { CAUSTICS, causticsProjectionMatrix } from "./causticsConfig";
+import { causticTextureUniform } from "./causticTextureUniform";
 import { skySunDirection } from "./skySun";
 import { CAUSTICS_GLSL } from "./causticsGlsl";
 import {
   CAUSTICS_TEXTURE_URL,
   configureCausticsTexture,
 } from "./causticsTexture";
+import { useProceduralCausticsTexture } from "./ProceduralCausticsContext";
 
 const vertexShader = /* glsl */ `
   varying vec2 vCausticUv;
@@ -50,14 +52,17 @@ const fragmentShader = /* glsl */ `
 export function useCausticsProjectedMaterial(
   strength: number = CAUSTICS.strength,
 ) {
-  const causticSource = useTexture(CAUSTICS_TEXTURE_URL);
-  const causticMap = useMemo(() => {
-    const map = configureCausticsTexture(causticSource.clone());
+  const proceduralTex = useProceduralCausticsTexture();
+  const staticSource = useTexture(CAUSTICS_TEXTURE_URL);
+
+  const staticMap = useMemo(() => {
+    if (CAUSTICS.useProceduralCaustics) return null;
+    const map = configureCausticsTexture(staticSource.clone());
     map.needsUpdate = true;
     return map;
-  }, [causticSource]);
+  }, [staticSource]);
 
-  useEffect(() => () => causticMap.dispose(), [causticMap]);
+  useEffect(() => () => staticMap?.dispose(), [staticMap]);
 
   const causticProj = useMemo(() => causticsProjectionMatrix(), []);
   const scroll = useMemo(() => new Vector2(1, 0), []);
@@ -66,7 +71,7 @@ export function useCausticsProjectedMaterial(
     () =>
       new ShaderMaterial({
         uniforms: {
-          tCaustic: { value: causticMap },
+          tCaustic: { value: staticMap },
           uTime: { value: 0 },
           uStrength: { value: strength },
           uChromaticSplit: { value: CAUSTICS.chromaticSplit },
@@ -86,12 +91,17 @@ export function useCausticsProjectedMaterial(
         side: DoubleSide,
         toneMapped: false,
       }),
-    [causticMap, causticProj, scroll, strength],
+    [causticProj, scroll, staticMap, strength],
   );
 
   useEffect(() => () => material.dispose(), [material]);
 
   useFrame((state) => {
+    const tex = CAUSTICS.useProceduralCaustics
+      ? (proceduralTex ?? causticTextureUniform.value)
+      : staticMap;
+    if (tex) material.uniforms.tCaustic.value = tex;
+
     material.uniforms.uTime.value = state.clock.elapsedTime;
     const s = scroll;
     s.set(skySunDirection.x, skySunDirection.z);

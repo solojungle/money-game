@@ -11,6 +11,9 @@ import {
   snapBaseFacePiece,
   snapInteriorWallPiece,
 } from "./roomGeometry";
+import { isInsideBaseInterior } from "./interiorVolume";
+import { resolveStructuralPlacementY } from "./structuralPlacement";
+import { snapToStructuralSocket } from "./structuralSockets";
 import type { PlacedPiece, PlacementSurface } from "./types";
 
 export type PlacementPreview = {
@@ -32,21 +35,42 @@ export function roomCentersFromPlaced(
   return placed
     .filter(
       (p) =>
-        p.pieceId === "piece_room" || p.pieceId === "piece_half_round_room",
+        p.pieceId === "piece_room" ||
+        p.pieceId === "piece_half_round_room" ||
+        p.pieceId === "piece_corridor",
     )
     .map((p) => p.position);
 }
 
+export function isInsideAnyStructuralInterior(
+  pos: [number, number, number],
+  placed: PlacedPiece[],
+): boolean {
+  return isInsideBaseInterior(pos, placed);
+}
+
+/** @deprecated Use isInsideAnyStructuralInterior */
 export function isInsideAnyRoom(
   pos: [number, number, number],
   placed: PlacedPiece[],
 ): boolean {
-  return placed.some((p) => {
-    if (p.pieceId !== "piece_room" && p.pieceId !== "piece_half_round_room") {
-      return false;
-    }
-    return isInsideRoomVolume(pos, p.position, roomHalfExtents(p.pieceId));
-  });
+  return isInsideAnyStructuralInterior(pos, placed);
+}
+
+function inferInteriorSurface(
+  hitPoint: [number, number, number],
+  hitNormal: [number, number, number],
+  pieceBuildLocation: string,
+  placed: PlacedPiece[],
+): PlacementSurface {
+  const ny = hitNormal[1];
+  if (Math.abs(ny) > 0.75) {
+    return ny > 0 ? "interior_floor" : "interior";
+  }
+  if (pieceBuildLocation === "interior_wall") return "interior_wall";
+  if (pieceBuildLocation === "interior_floor") return "interior_floor";
+  if (isInsideAnyStructuralInterior(hitPoint, placed)) return "interior";
+  return "open_water";
 }
 
 export function computePlacementPreview(opts: {
@@ -60,42 +84,28 @@ export function computePlacementPreview(opts: {
   const piece = getPiece(opts.pieceId);
   if (!piece?.placeable) return null;
 
-  const insideRoom = isInsideAnyRoom(opts.hitPoint, opts.placed);
+  const insideStructural = isInsideAnyStructuralInterior(
+    opts.hitPoint,
+    opts.placed,
+  );
   const ny = opts.hitNormal[1];
 
   let surface: PlacementSurface = "open_water";
   if (structuralPieceIds().includes(opts.pieceId)) {
     if (ny > 0.6) surface = "seabed";
-    else if (insideRoom) surface = "interior";
+    else if (insideStructural) surface = "interior";
     else surface = "seabed";
   } else if (piece.buildLocation === "base_exterior") {
-    surface = ny > 0.4 ? "base_exterior" : "base_exterior";
+    surface = "base_exterior";
   } else if (piece.buildLocation === "base_face") {
     surface = "base_face";
-  } else if (
-    isInsideRoomVolume(
+  } else if (insideStructural) {
+    surface = inferInteriorSurface(
       opts.hitPoint,
-      [-3, 1.2, -4],
-      roomHalfExtents("piece_room"),
-    )
-  ) {
-    if (Math.abs(ny) > 0.75) {
-      surface = ny > 0 ? "interior_floor" : "interior";
-    } else {
-      surface =
-        piece.buildLocation === "interior_wall"
-          ? "interior_wall"
-          : piece.buildLocation === "interior_floor"
-            ? "interior_floor"
-            : "interior";
-    }
-  } else if (insideRoom) {
-    surface =
-      piece.buildLocation === "interior_wall"
-        ? "interior_wall"
-        : piece.buildLocation === "interior_floor"
-          ? "interior_floor"
-          : "interior";
+      opts.hitNormal,
+      piece.buildLocation,
+      opts.placed,
+    );
   }
 
   let position: [number, number, number] = [
@@ -103,6 +113,29 @@ export function computePlacementPreview(opts: {
     snapCoord(opts.hitPoint[1], opts.snapEnabled),
     snapCoord(opts.hitPoint[2], opts.snapEnabled),
   ];
+
+  let rotationY = opts.rotationY;
+
+  if (structuralPieceIds().includes(opts.pieceId) && surface === "seabed") {
+    const socketSnap = snapToStructuralSocket({
+      pieceId: opts.pieceId,
+      hitPoint: opts.hitPoint,
+      placed: opts.placed,
+      snapEnabled: opts.snapEnabled,
+    });
+    if (socketSnap) {
+      position = socketSnap.position;
+      rotationY = socketSnap.rotationY;
+    }
+    position[1] = resolveStructuralPlacementY(
+      opts.pieceId,
+      position[0],
+      position[2],
+      opts.hitPoint[1],
+    );
+    position[0] = snapCoord(position[0], opts.snapEnabled);
+    position[2] = snapCoord(position[2], opts.snapEnabled);
+  }
 
   if (
     piece.buildLocation === "base_exterior" &&
@@ -114,7 +147,6 @@ export function computePlacementPreview(opts: {
     }
   }
 
-  let rotationY = opts.rotationY;
   if (piece.buildLocation === "interior_wall") {
     const [pw, ph, pd] = getScaledGhostSize(opts.pieceId);
     const snapped = snapInteriorWallPiece({
@@ -160,7 +192,19 @@ export function computePlacementPreview(opts: {
     if (stacked.length > 0) {
       position[1] = stacked[0]!.position[1] + 0.9;
     } else {
-      position[1] = 1.35;
+      const nearest = opts.placed.find(
+        (p) =>
+          (p.pieceId === "piece_room" ||
+            p.pieceId === "piece_half_round_room" ||
+            p.pieceId === "piece_corridor") &&
+          isInsideRoomVolume(position, p.position, roomHalfExtents(p.pieceId)),
+      );
+      if (nearest) {
+        const half = roomHalfExtents(nearest.pieceId);
+        position[1] = nearest.position[1] - half[1] + 1.35;
+      } else {
+        position[1] = 1.35;
+      }
     }
   }
 
@@ -170,6 +214,7 @@ export function computePlacementPreview(opts: {
     occupants,
     targetPosition: position,
     wallStack,
+    placed: opts.placed,
   });
 
   return {

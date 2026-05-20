@@ -15,6 +15,9 @@ uniform float uUnderSunStrength;
 uniform float uUnderSnellOpacity;
 uniform float uUnderRimOpacity;
 uniform float uWaterSurfaceY;
+uniform sampler2D tCaustic;
+uniform float uCausticWorldScale;
+uniform float uCausticStrength;
 
 varying vec3 vWorldPos;
 varying vec2 vWorldXZ;
@@ -43,9 +46,15 @@ void main() {
   float snell = pow(max(dot(surfaceNormal, lookUp), 0.0), 2.8);
   float rim = 1.0 - snell;
 
+  vec3 causticRgb = texture2D(tCaustic, vWorldXZ * uCausticWorldScale).rgb;
+  float causticLuma = max(max(causticRgb.r, causticRgb.g), causticRgb.b);
+  float causticShimmer = pow(causticLuma, 1.35) * uCausticStrength;
+
   vec3 color = uUnderTirColor * 0.35;
   color = mix(color, uUnderSnellColor, snell * 0.7);
   color = mix(color, uSurfaceGlow, snell * snell * 0.5);
+  color += causticRgb * causticShimmer * snell * 0.85;
+  color = mix(color, uSurfaceGlow, causticShimmer * snell * 0.12);
 
   vec3 halfDir = normalize(uSunDir + toCamera);
   float spec = pow(max(dot(surfaceNormal, halfDir), 0.0), 220.0);
@@ -59,7 +68,7 @@ void main() {
   color += uSurfaceGlow * shimmer * 0.06 * snell;
 
   float alpha =
-    (0.06 + snell * 0.48) *
+    (0.08 + snell * 0.52 + causticShimmer * snell * 0.08) *
     mix(uUnderRimOpacity, uUnderSnellOpacity, snell) *
     uOpacity;
 

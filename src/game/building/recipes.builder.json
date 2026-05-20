@@ -24,7 +24,8 @@
   {
     "id": "piece_corridor",
     "displayName": "Corridor",
-    "description": "Connective passage between rooms.",
+    "description": "Basic tubular compartment. Configurable size. Accessed by hatch. Can mount basic power and survival systems.",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Corridor",
     "category": "standard_elements",
     "subsection": "structural",
     "buildLocation": "seabed",
@@ -46,7 +47,8 @@
   {
     "id": "piece_room",
     "displayName": "Room",
-    "description": "Expandable living space module.",
+    "description": "A space that can be expanded horizontally in any direction.",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Room",
     "category": "standard_elements",
     "subsection": "structural",
     "buildLocation": "seabed",
@@ -254,7 +256,7 @@
         "count": 1
       }
     ],
-    "placeable": false
+    "placeable": true
   },
   {
     "id": "piece_interior_wall",
@@ -577,7 +579,7 @@
         "count": 3
       }
     ],
-    "placeable": false
+    "placeable": true
   },
   {
     "id": "piece_keep_calm_poster",
@@ -594,7 +596,7 @@
         "count": 1
       }
     ],
-    "placeable": false
+    "placeable": true
   },
   {
     "id": "piece_single_bed",
@@ -615,7 +617,7 @@
         "count": 3
       }
     ],
-    "placeable": false
+    "placeable": true
   },
   {
     "id": "piece_metal_farm",
@@ -636,6 +638,736 @@
         "count": 2
       }
     ],
-    "placeable": false
+    "placeable": true
+  },
+  {
+    "id": "piece_nook",
+    "displayName": "Nook",
+    "description": "Small nook with upward-viewing window.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_nook",
+    "pinBlueprintId": "piece_nook",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Nook",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      3,
+      2,
+      3
+    ]
+  },
+  {
+    "id": "piece_moonpool",
+    "displayName": "Moonpool",
+    "description": "Moonpool of configurable size and shape. Allows entry/exit of personnel and vehicles from a room.",
+    "category": "standard_elements",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_moonpool",
+    "pinBlueprintId": "piece_moonpool",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Moonpool",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 6
+      },
+      {
+        "itemId": "glass",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      5,
+      3,
+      5
+    ]
+  },
+  {
+    "id": "piece_tadpole_dock",
+    "displayName": "Tadpole Dock",
+    "description": "Docking station for Tadpole class vehicles. Recharges vehicles while powered when habitat is powered. Draws 10 energy/sec.",
+    "category": "standard_elements",
+    "subsection": "vehicles",
+    "buildLocation": "base_face",
+    "blueprintId": "piece_tadpole_dock",
+    "pinBlueprintId": "piece_tadpole_dock",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Tadpole_Dock",
+    "powerDraw": 10,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 4
+      },
+      {
+        "itemId": "wiring",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      1.5,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_vehicle_fabricator",
+    "displayName": "Vehicle Fabricator",
+    "description": "Critical survival system. Atomically restructures raw resources into vehicles and chassis. Draws 5 energy/sec.",
+    "category": "standard_elements",
+    "subsection": "vehicles",
+    "buildLocation": "interior",
+    "blueprintId": "piece_vehicle_fabricator",
+    "pinBlueprintId": "piece_vehicle_fabricator",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Vehicle_Fabricator",
+    "powerDraw": 5,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2.5,
+      2,
+      2
+    ]
+  },
+  {
+    "id": "piece_processor",
+    "displayName": "Processor",
+    "description": "Completes complex biochemical and manufacturing tasks over time for more advanced recipes. Draws 10 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "stations",
+    "buildLocation": "interior",
+    "blueprintId": "piece_processor",
+    "pinBlueprintId": "piece_processor",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Processor",
+    "powerDraw": 10,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      1.8,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_biolab",
+    "displayName": "Biolab",
+    "description": "Modifies your Adaptations. Draws 5 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "stations",
+    "buildLocation": "interior",
+    "blueprintId": "piece_biolab",
+    "pinBlueprintId": "piece_biolab",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Biolab",
+    "powerDraw": 5,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "table_coral",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.4,
+      1.6,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_tailing_chest",
+    "displayName": "Tailing Chest",
+    "description": "A large storage chest. Commonly used by inhabitants of Proteus. Can be constructed in water. 25 Storage slots.",
+    "category": "interior_facilities",
+    "subsection": "storage",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_tailing_chest",
+    "pinBlueprintId": "piece_tailing_chest",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Tailing_Chest",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      0.9,
+      0.8
+    ]
+  },
+  {
+    "id": "piece_wall_rack",
+    "displayName": "Wall Rack",
+    "description": "Wall attachment to hold one item.",
+    "category": "interior_facilities",
+    "subsection": "storage",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_wall_rack",
+    "pinBlueprintId": "piece_wall_rack",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Wall_Rack",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.6,
+      0.4,
+      0.25
+    ]
+  },
+  {
+    "id": "piece_small_ceiling_light",
+    "displayName": "Small Ceiling Light",
+    "description": "Simple interior lighting solution. Draws 1 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "interior_ceiling",
+    "blueprintId": "piece_small_ceiling_light",
+    "pinBlueprintId": "piece_small_ceiling_light",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Small_Ceiling_Light",
+    "powerDraw": 1,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "glass",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.35,
+      0.1,
+      0.35
+    ]
+  },
+  {
+    "id": "piece_rectangular_ceiling_light",
+    "displayName": "Rectangular Ceiling Light",
+    "description": "A practical light for enhancing a pioneer's workspace. Draws 2 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "interior_ceiling",
+    "blueprintId": "piece_rectangular_ceiling_light",
+    "pinBlueprintId": "piece_rectangular_ceiling_light",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Rectangular_Ceiling_Light",
+    "powerDraw": 2,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "glass",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1,
+      0.12,
+      0.5
+    ]
+  },
+  {
+    "id": "piece_wall_light_small",
+    "displayName": "Wall Light Small",
+    "description": "Creates a small area of light on walls. Provides no Vitamin D. Draws 1 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_wall_light_small",
+    "pinBlueprintId": "piece_wall_light_small",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Wall_Light_Small",
+    "powerDraw": 1,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.25,
+      0.25,
+      0.15
+    ]
+  },
+  {
+    "id": "piece_wall_light_large",
+    "displayName": "Wall Light Large",
+    "description": "Create a low light environment to set the mood for your fellow colonists. Draws 2 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_wall_light_large",
+    "pinBlueprintId": "piece_wall_light_large",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Wall_Light_Large",
+    "powerDraw": 2,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.5,
+      0.35,
+      0.2
+    ]
+  },
+  {
+    "id": "piece_axum_wall_lamp",
+    "displayName": "Axum Wall Lamp",
+    "description": "Can be constructed in water. Draws 1 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_axum_wall_lamp",
+    "pinBlueprintId": "piece_axum_wall_lamp",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Axum_Wall_Lamp",
+    "powerDraw": 1,
+    "ingredients": [
+      {
+        "itemId": "glass",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.3,
+      0.5,
+      0.25
+    ]
+  },
+  {
+    "id": "piece_battery_terminal",
+    "displayName": "Battery Terminal",
+    "description": "Recharges batteries.",
+    "category": "interior_facilities",
+    "subsection": "power",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_battery_terminal",
+    "pinBlueprintId": "piece_battery_terminal",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Battery_Terminal",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.8,
+      0.6,
+      0.3
+    ]
+  },
+  {
+    "id": "piece_power_cell_terminal",
+    "displayName": "Power Cell Terminal",
+    "description": "Recharges power cells.",
+    "category": "interior_facilities",
+    "subsection": "power",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_power_cell_terminal",
+    "pinBlueprintId": "piece_power_cell_terminal",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Power_Cell_Terminal",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1,
+      1,
+      0.4
+    ]
+  },
+  {
+    "id": "piece_biobed",
+    "displayName": "Biobed",
+    "description": "Creates a backup point for pioneers in case of covered work-related accident. Draws 0 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "habitat_systems",
+    "buildLocation": "interior_floor",
+    "blueprintId": "piece_biobed",
+    "pinBlueprintId": "piece_biobed",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Biobed",
+    "powerDraw": 0,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "fiber_mesh",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      0.8,
+      2
+    ]
+  },
+  {
+    "id": "piece_noa_terminal",
+    "displayName": "NoA Terminal",
+    "description": "Noetic Advisor node. Generates tasks and manages mission resources. Draws 2 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "habitat_systems",
+    "buildLocation": "interior",
+    "blueprintId": "piece_noa_terminal",
+    "pinBlueprintId": "piece_noa_terminal",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/NoA_Terminal",
+    "powerDraw": 2,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      1.1,
+      0.8
+    ]
+  },
+  {
+    "id": "piece_scanner_station",
+    "displayName": "Scanner Station",
+    "description": "Mission critical. Locates resources, wrecks, and anomalies within an expanded range. High power draw. Draws 10 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "habitat_systems",
+    "buildLocation": "interior",
+    "blueprintId": "piece_scanner_station",
+    "pinBlueprintId": "piece_scanner_station",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Scanner_Station",
+    "powerDraw": 10,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 3
+      },
+      {
+        "itemId": "wiring",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.5,
+      1.4,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_time_of_day_display",
+    "displayName": "Time of Day Display",
+    "description": "Show the time of day. Draws 1 energy/sec.",
+    "category": "interior_facilities",
+    "subsection": "habitat_systems",
+    "buildLocation": "interior_wall",
+    "blueprintId": "piece_time_of_day_display",
+    "pinBlueprintId": "piece_time_of_day_display",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Time_of_Day_Display",
+    "powerDraw": 1,
+    "ingredients": [
+      {
+        "itemId": "copper",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.5,
+      0.35,
+      0.1
+    ]
+  },
+  {
+    "id": "piece_hydroelectric_turbine",
+    "displayName": "Hydroelectric Turbine",
+    "description": "Generates power when placed inside a natural current. Requires power transmission device. Cannot be placed in an artificial current. Generates 12 energy/sec.",
+    "category": "exterior_facilities",
+    "subsection": "power",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_hydroelectric_turbine",
+    "pinBlueprintId": "piece_hydroelectric_turbine",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Hydroelectric_Turbine",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "wiring",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.5,
+      1.5,
+      1
+    ]
+  },
+  {
+    "id": "piece_thermal_plant",
+    "displayName": "Thermal Plant",
+    "description": "Converts heat into usable power. Excellent for the Zezuran desert. Requires power transmission device. Generates 1-16 energy/sec.",
+    "category": "exterior_facilities",
+    "subsection": "power",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_thermal_plant",
+    "pinBlueprintId": "piece_thermal_plant",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Thermal_Plant",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      },
+      {
+        "itemId": "gold",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      1.2,
+      1.2,
+      1.2
+    ]
+  },
+  {
+    "id": "piece_spotlight",
+    "displayName": "Spotlight",
+    "description": "Produces a very bright light to provide pioneers with a sense of safety. Draws 2 energy/sec.",
+    "category": "exterior_facilities",
+    "subsection": "lighting",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_spotlight",
+    "pinBlueprintId": "piece_spotlight",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Spotlight",
+    "powerDraw": 2,
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "glass",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  {
+    "id": "piece_habitat_beacon",
+    "displayName": "Habitat Beacon",
+    "description": "Generates a signal to help you locate your habitat.",
+    "category": "exterior_facilities",
+    "subsection": "utility",
+    "buildLocation": "base_exterior",
+    "blueprintId": "piece_habitat_beacon",
+    "pinBlueprintId": "piece_habitat_beacon",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Habitat_Beacon",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.4,
+      0.6,
+      0.4
+    ]
+  },
+  {
+    "id": "piece_portable_locker",
+    "displayName": "Portable Locker",
+    "description": "Carryable, deployable storage. Does not change swim speed.",
+    "category": "utility",
+    "subsection": "storage",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_portable_locker",
+    "pinBlueprintId": "piece_portable_locker",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Portable_Locker",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.7,
+      0.7,
+      0.7
+    ]
+  },
+  {
+    "id": "piece_beacon",
+    "displayName": "Beacon",
+    "description": "Ultrasound buoy. Marks position with a signal. Manage with PDA.",
+    "category": "utility",
+    "subsection": "navigation",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_beacon",
+    "pinBlueprintId": "piece_beacon",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Beacon",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.3,
+      0.8,
+      0.3
+    ]
+  },
+  {
+    "id": "piece_portable_oxygen_generator",
+    "displayName": "Portable Oxygen Generator",
+    "description": "Produces oxygen over time through electrolysis. Requires battery to function.",
+    "category": "utility",
+    "subsection": "survival",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_portable_oxygen_generator",
+    "pinBlueprintId": "piece_portable_oxygen_generator",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Portable_Oxygen_Generator",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      },
+      {
+        "itemId": "copper",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.5,
+      0.6,
+      0.5
+    ]
+  },
+  {
+    "id": "piece_work_light",
+    "displayName": "Work Light",
+    "description": "Carryable mobile light sources. Requires battery to function.",
+    "category": "utility",
+    "subsection": "lighting",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_work_light",
+    "pinBlueprintId": "piece_work_light",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Work_Light",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 1
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      0.25,
+      0.25,
+      0.25
+    ]
+  },
+  {
+    "id": "piece_dive_elevator",
+    "displayName": "Dive Elevator",
+    "description": "Underwater elevator. Ideal for establishing work sites.",
+    "category": "utility",
+    "subsection": "structural",
+    "buildLocation": "seabed",
+    "blueprintId": "piece_dive_elevator",
+    "pinBlueprintId": "piece_dive_elevator",
+    "wikiUrl": "https://wiki.subnautica.com/sn2/Dive_Elevator",
+    "ingredients": [
+      {
+        "itemId": "titanium",
+        "count": 4
+      },
+      {
+        "itemId": "wiring",
+        "count": 2
+      }
+    ],
+    "placeable": true,
+    "ghostSize": [
+      2,
+      4,
+      2
+    ]
   }
 ]

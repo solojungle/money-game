@@ -4,6 +4,8 @@ Money Game uses SN2’s Habitat Builder UX and placement rules. **All builder pi
 
 **Sources:** [Epic base-building guide](https://store.epicgames.com/news/subnautica-2-base-building-guide), [Wikily base building](https://wikily.gg/subnautica-2/base-building/), [subnautica2.gg blueprints](https://subnautica2.gg/blueprints), [PC Gamer habitat builder](https://www.pcgamer.com/games/survival-crafting/subnautica-2-base-habitat-builder/). EA reference: May 2026.
 
+**Full piece catalog (46 items, four categories):** [`sn2-seabase-catalog.md`](sn2-seabase-catalog.md)
+
 ---
 
 ## Habitat Builder
@@ -76,6 +78,10 @@ Money Game uses SN2’s Habitat Builder UX and placement rules. **All builder pi
 | Floor locker | 30 | 1.0 × 1.2 × 0.7 |
 
 ---
+
+## Megabase showcase (play mode)
+
+New games spawn the **megabase** at the origin: every builder recipe placed once for visual review. See [`megabase-floorplan.md`](megabase-floorplan.md) and [`src/game/building/megabaseLayout.ts`](../src/game/building/megabaseLayout.ts).
 
 ## MVP pieces (implemented in code)
 

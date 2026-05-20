@@ -1,6 +1,7 @@
 import { getScaledGhostSize } from "../../game/building";
 import { useGameStore } from "../../store/gameStore";
 import { HatchMesh } from "./building/HatchMesh";
+import { CorridorShellMesh } from "./building/CorridorShellMesh";
 import { RoomShellMesh } from "./building/RoomShellMesh";
 
 export function PlacementGhost() {
@@ -40,6 +41,20 @@ export function PlacementGhost() {
             depthWrite={false}
           />
         </mesh>
+      </group>
+    );
+  }
+
+  if (selectedId === "piece_corridor") {
+    return (
+      <group position={preview.position} rotation={[0, preview.rotationY, 0]}>
+        <CorridorShellMesh
+          width={w}
+          height={h}
+          depth={d}
+          ghostColor={color}
+          ghostOpacity={0.45}
+        />
       </group>
     );
   }

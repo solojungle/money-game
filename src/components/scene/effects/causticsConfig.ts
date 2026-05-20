@@ -10,16 +10,31 @@ export function getCausticsSun(): Vector3 {
 }
 
 export const CAUSTICS = {
+  /** Procedural RT from manthrax/fish; false = static JPG fallback. */
+  useProceduralCaustics: true,
   /** Additive brightness on floors / walls / exterior modules. */
-  strength: 0.36,
+  strength: 0.24,
   /** RGB split — keep 0; offset sampling creates ghost flecks on this texture. */
   chromaticSplit: 0,
   /** Higher = smaller, tighter pools (tile density on world surfaces). */
-  worldScale: 0.34,
+  worldScale: 0.28,
   /** Drift speed across world-projected UVs. */
-  speed: 0.011,
+  speed: 0.015,
   waterSurfaceY: waterSurfaceWorldY,
   minDepth: 0.0001,
+  /** Procedural RT generator (fish CausticShader defaults). */
+  procedural: {
+    baseColor: "#005880",
+    speed: 0.63,
+    scale: 1.0,
+  },
+  /** World XZ scale for GLB material inject (fish dunes/coral). */
+  glbWorldScale: 0.0125,
+  glbHeightMin: -2,
+  glbHeightMax: waterSurfaceWorldY,
+  /** Underside water ceiling caustic tiling. */
+  undersideCausticScale: 0.018,
+  undersideCausticStrength: 0.55,
   /**
    * Off — fullscreen depth pass doubles projected caustics and can feedback-loop.
    * Surfaces use {@link CausticsProjectedLayer} instead.

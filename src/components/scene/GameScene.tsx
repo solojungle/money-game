@@ -4,6 +4,7 @@ import {
   Environment,
   KeyboardControls,
   OrbitControls,
+  useGLTF,
   useTexture,
 } from "@react-three/drei";
 import { Physics, type RapierRigidBody } from "@react-three/rapier";
@@ -20,10 +21,20 @@ import { Player } from "./Player";
 import { CAUSTICS } from "./effects/causticsConfig";
 import { CausticsScreenPass } from "./effects/CausticsScreenPass";
 import { CAUSTICS_TEXTURE_URL } from "./effects/causticsTexture";
+import { ProceduralCausticsPass } from "./effects/ProceduralCausticsPass";
 import { WATER_NORMAL_URL } from "./effects/waterSurfaceTextures";
-
+import {
+  CORAL_GLB_URL,
+  FISH_GLB_URL,
+  WATER_DUNES_GLB_URL,
+} from "./models/fishModelPaths";
+import { ORE_GLB_URLS } from "./models/oreModelPaths";
 useTexture.preload(CAUSTICS_TEXTURE_URL);
 useTexture.preload(WATER_NORMAL_URL);
+useGLTF.preload(FISH_GLB_URL);
+useGLTF.preload(WATER_DUNES_GLB_URL);
+useGLTF.preload(CORAL_GLB_URL);
+for (const url of ORE_GLB_URLS) useGLTF.preload(url);
 import { OceanSky } from "./effects/OceanSky";
 import { SunLighting } from "./effects/SunLighting";
 import { UnderwaterAtmosphere } from "./effects/UnderwaterAtmosphere";
@@ -35,9 +46,9 @@ import { ZoneOverlapProvider } from "./ZoneOverlapProvider";
 function WorldLighting() {
   return (
     <>
-      <ambientLight intensity={0.18} />
+      <ambientLight intensity={0.15} />
       <hemisphereLight
-        args={["#a0ecff", "#c8a050", 0.32]}
+        args={["#a0ecff", "#c8a050", 0.27]}
         position={[0, 20, 0]}
       />
       <SunLighting />
@@ -57,14 +68,14 @@ function SceneContent({
 }: SceneContentProps & { paused: boolean }) {
   const playerRef = useRef<RapierRigidBody>(null);
 
-  return (
+  const sceneBody = (
     <>
       <OceanSky />
       <UnderwaterAtmosphere playerRef={playerRef} />
       <UnderwaterParticles playerRef={playerRef} />
       {CAUSTICS.enableScreenPass ? <CausticsScreenPass /> : null}
       <WorldLighting />
-      <Environment preset="dawn" environmentIntensity={0.22} frames={1} />
+      <Environment preset="dawn" environmentIntensity={0.14} frames={1} />
       <WaterSurface />
       <Physics gravity={[0, -1.2, 0]} paused={!started}>
         <ZoneOverlapProvider>
@@ -87,6 +98,12 @@ function SceneContent({
         />
       )}
     </>
+  );
+
+  return CAUSTICS.useProceduralCaustics ? (
+    <ProceduralCausticsPass>{sceneBody}</ProceduralCausticsPass>
+  ) : (
+    sceneBody
   );
 }
 

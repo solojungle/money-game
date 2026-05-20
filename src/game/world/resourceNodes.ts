@@ -7,7 +7,7 @@ export type ResourceNodeDef = {
   tier: ResourceNodeTier;
   yield: number;
   position: [number, number, number];
-  /** Visual scale multiplier for sphere radius */
+  /** Visual scale multiplier for ore mesh */
   scale: number;
   emissiveIntensity: number;
 };

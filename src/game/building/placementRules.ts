@@ -1,4 +1,6 @@
 import recipeData from "./recipes.builder.json";
+import { isInsideBaseInterior } from "./interiorVolume";
+import { structuralAboveSeabed } from "./structuralPlacement";
 import type {
   BuilderPieceRecipe,
   BuildLocation,
@@ -99,11 +101,28 @@ export function canPlacePiece(opts: {
   occupants: PlacementOccupant[];
   targetPosition: [number, number, number];
   wallStack?: number;
+  placed?: readonly PlacedPiece[];
 }): { ok: true } | { ok: false; reason: string } {
   const { piece, surface, occupants, targetPosition, wallStack = 0 } = opts;
 
   if (!piece.placeable) {
     return { ok: false, reason: "Not yet placeable in world" };
+  }
+
+  if (
+    structuralPieceIds().includes(piece.id) &&
+    surface === "seabed" &&
+    !structuralAboveSeabed(piece.id, targetPosition)
+  ) {
+    return { ok: false, reason: "Module intersects seabed" };
+  }
+
+  if (
+    isInteriorBuildLocation(piece.buildLocation) &&
+    opts.placed &&
+    !isInsideBaseInterior(targetPosition, opts.placed)
+  ) {
+    return { ok: false, reason: "Must be placed inside a base" };
   }
 
   if (!locationAllowsSurface(piece.buildLocation, surface)) {

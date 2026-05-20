@@ -7,9 +7,13 @@ import {
 import { zoneIdForInteractable } from "../../game/world/interactables";
 import { INTERACT_ZONE_ID_KEY } from "../../game/world/resolveInteractionFocus";
 import { useGameStore } from "../../store/gameStore";
+import { FaunaFishMesh } from "./FaunaFishMesh";
+import { useSeafloorSurface } from "./SeafloorSurfaceContext";
 import { useCollectAnimation } from "./useCollectAnimation";
 
-const FAUNA_MESH_RADIUS = 0.35;
+const FAUNA_SURFACE_OFFSET = 0.12;
+
+const FAUNA_VISUAL_RADIUS = 0.55;
 
 type FaunaPlaceholderProps = {
   def: FaunaSpawnDef;
@@ -18,8 +22,13 @@ type FaunaPlaceholderProps = {
 export function FaunaPlaceholder({ def }: FaunaPlaceholderProps) {
   const harvested = useGameStore((s) => s.harvestedIds.includes(def.id));
   const { done, groupRef } = useCollectAnimation(harvested);
+  const { sampleSpawnY, surfaceRevision } = useSeafloorSurface();
+  const position = useMemo((): [number, number, number] => {
+    const [x, , z] = def.position;
+    return [x, sampleSpawnY(x, z, FAUNA_SURFACE_OFFSET * def.scale), z];
+  }, [def.position, def.scale, sampleSpawnY, surfaceRevision]);
   const hasZone = faunaHasInteractZone(def.role);
-  const visualRadius = FAUNA_MESH_RADIUS * def.scale;
+  const visualRadius = FAUNA_VISUAL_RADIUS * def.scale;
 
   const zoneId = hasZone
     ? zoneIdForInteractable({
@@ -37,22 +46,11 @@ export function FaunaPlaceholder({ def }: FaunaPlaceholderProps) {
 
   if (done) return null;
 
-  const emissive = def.emissiveIntensity ?? 0.12;
-
   return (
-    <group ref={groupRef} position={def.position}>
-      <mesh castShadow scale={def.scale} userData={zoneUserData}>
-        <sphereGeometry args={[FAUNA_MESH_RADIUS, 14, 14]} />
-        <meshStandardMaterial
-          color={def.color}
-          emissive={def.emissive ?? def.color}
-          emissiveIntensity={emissive}
-          roughness={0.45}
-          ref={(mat) => {
-            if (mat) mat.userData.baseEmissive = emissive;
-          }}
-        />
-      </mesh>
+    <group ref={groupRef} position={position}>
+      <group userData={zoneUserData}>
+        <FaunaFishMesh color={def.color} scale={def.scale} />
+      </group>
       {zoneId ? (
         <mesh visible={false} userData={zoneUserData}>
           <sphereGeometry args={[aimAssistRadius(visualRadius), 8, 8]} />

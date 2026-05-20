@@ -1,5 +1,6 @@
 import recipeData from "./recipes.builder.json";
 import { scaleSize } from "./buildingScale";
+import { createMegabasePlacedPieces } from "./megabaseLayout";
 import type { BlueprintId } from "../_kernel/types";
 import type {
   BuilderCategory,
@@ -38,6 +39,16 @@ export {
   snapToRoomFace,
 } from "./roomGeometry";
 export { interiorFloorY, isInsideBaseInterior } from "./interiorVolume";
+export {
+  resolveStructuralPlacementY,
+  seabedSurfaceY,
+  structuralAboveSeabed,
+} from "./structuralPlacement";
+export {
+  nearestStructuralModule,
+  snapToStructuralSocket,
+  STRUCTURAL_PIECE_IDS,
+} from "./structuralSockets";
 export {
   HATCH_FACE_SLACK,
   hatchOpeningsForRoom,
@@ -197,41 +208,14 @@ export function isPiecePlaceable(pieceId: string): boolean {
   return getPiece(pieceId)?.placeable === true;
 }
 
+export {
+  createMegabasePlacedPieces,
+  megabaseHubCenter,
+} from "./megabaseLayout";
+
+/** Play-mode default base — full builder catalog showcase. */
 export function createStarterPlacedPieces(): PlacedPiece[] {
-  return [
-    {
-      id: "placed_room_starter",
-      pieceId: "piece_room",
-      position: [-3, 1.2, -4],
-      rotationY: 0,
-    },
-    {
-      id: "placed_hatch_starter",
-      pieceId: "piece_hatch",
-      position: [-3, 1.2, -2.06],
-      rotationY: 0,
-    },
-    {
-      id: "placed_fab_starter",
-      pieceId: "piece_fabricator",
-      position: [-1.5, 0.55, -4],
-      rotationY: 0,
-    },
-    {
-      id: "placed_wall_locker_a",
-      pieceId: "piece_wall_locker",
-      position: [-5.205, 1.35, -4],
-      rotationY: -Math.PI / 2,
-      wallStack: 0,
-    },
-    {
-      id: "placed_wall_locker_b",
-      pieceId: "piece_wall_locker",
-      position: [-5.205, 2.25, -4],
-      rotationY: -Math.PI / 2,
-      wallStack: 1,
-    },
-  ];
+  return createMegabasePlacedPieces();
 }
 
 export type { BuilderIngredient };
